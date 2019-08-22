@@ -12,22 +12,6 @@ public class MainFx extends Application {
 
     @Override
     public void start(Stage stage) {
-//        String javaVersion = System.getProperty("java.version");
-//        String javafxVersion = System.getProperty("javafx.version");
-//        Label l = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-//        Scene scene = new Scene(new StackPane(l), 640, 480);
-//        stage.setScene(scene);
-//        stage.show();
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.getItems().add("Nummer 1");
-        choiceBox.getItems().add("Nummer 2");
-        choiceBox.getItems().add("Nummer 3");
-        choiceBox.getItems().add("Nummer 4");
-        choiceBox.getItems().add("Nummer 5");
-        choiceBox.getItems().add("Nummer 6");
-        choiceBox.setOnAction(event -> {
-            System.out.println(choiceBox.getValue());
-        });
         BorderPane root = new BorderPane();
         BorderPane subRootPane = new BorderPane();
         SplitPane splitPane = new SplitPane();
