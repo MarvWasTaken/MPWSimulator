@@ -8,7 +8,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 public class MenuBuilder {
-    Button hamsterBtn;
+    ToggleButton hamsterBtn;
     int hamsterpos;
 
     public MenuBuilder() {
@@ -32,7 +32,7 @@ public class MenuBuilder {
         subRootPane.setBottom(statusLabel);
 
         splitPane.getItems().addAll(codeEditor, territory);
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 940, 650);
         return scene;
     }
 
@@ -49,6 +49,7 @@ public class MenuBuilder {
         quickItemIcon(openFileMenuItem, "main/resources/Open16.gif");
         MenuItem compileMenuItem = new MenuItem("Kompilieren");
         quickItemAcc(compileMenuItem, "SHORTCUT + K");
+        quickItemIcon(compileMenuItem, "main/resources/compile24.gif");
         MenuItem printEditorMenuItem = new MenuItem("Drucken");
         quickItemAcc(printEditorMenuItem, "SHORTCUT+P");
         quickItemIcon(printEditorMenuItem, "main/resources/Print16.gif");
@@ -141,24 +142,81 @@ public class MenuBuilder {
 
     public ToolBar buildToolbar() {
         ToolBar toolBar = new ToolBar();
+        Button createNewFileBtn = new Button();
+        quickButtonIcon(createNewFileBtn, "main/resources/new24.gif");
+        Button openFileBtn = new Button();
+        quickButtonIcon(openFileBtn, "main/resources/open24.gif");
 
-        Button createNewFileButton = new Button();
-        quickButtonIcon(createNewFileButton, "main/resources/new24.gif");
+        Button saveFileBtn = new Button();
+        quickButtonIcon(saveFileBtn, "main/resources/save24.gif");
+        Button compileFileBtn = new Button();
+        quickButtonIcon(compileFileBtn, "main/resources/compile24.gif");
 
-        Button openFileButton = new Button();
-        quickButtonIcon(openFileButton, "main/resources/open24.gif");
+        Button resizeBtn = new Button();
+        quickButtonIcon(resizeBtn, "main/resources/Terrain24.gif");
 
-        hamsterBtn = new Button();
-        quickButtonIcon(hamsterBtn, "main/resources/3Hamster32.png");
+        hamsterBtn = new ToggleButton();
+        ToggleButton cornBtn = new ToggleButton();
+        ToggleButton wallBtn = new ToggleButton();
+        ToggleButton deleteBtn = new ToggleButton();
+        quickToggleButtonIcon(hamsterBtn, "main/resources/3Hamster32.png");
+        quickToggleButtonIcon(cornBtn, "main/resources/corn24.gif");
+        quickToggleButtonIcon(wallBtn, "main/resources/wall24.gif");
+        quickToggleButtonIcon(deleteBtn, "main/resources/Delete24.gif");
         hamsterpos = 3;
         hamsterBtn.setOnAction(event -> {
             int i = (int) (Math.floor(Math.random() * 4));
             hamsterpos++;
             hamsterpos %= 4;
-            quickButtonIcon(hamsterBtn, "main/resources/" + hamsterpos + "Hamster32.png");
+            quickToggleButtonIcon(hamsterBtn, "main/resources/" + hamsterpos + "Hamster32.png");
         });
+        ToggleGroup btnTg = new ToggleGroup();
+        btnTg.getToggles().addAll(hamsterBtn, cornBtn, wallBtn, deleteBtn);
 
-        toolBar.getItems().addAll(createNewFileButton, openFileButton, new Separator(), hamsterBtn);
+        Button hamsterCornBtn = new Button();
+        Button hamsterLeftBtn = new Button();
+        Button hamsterMoveBtn = new Button();
+        Button hamsterPickBtn = new Button();
+        Button hamsterPutBtn = new Button();
+        quickButtonIcon(hamsterCornBtn, "main/resources/HamsterCorn24.png");
+        quickButtonIcon(hamsterLeftBtn, "main/resources/HamsterLeft24.png");
+        quickButtonIcon(hamsterMoveBtn, "main/resources/HamsterMove24.png");
+        quickButtonIcon(hamsterPickBtn, "main/resources/HamsterPick24.png");
+        quickButtonIcon(hamsterPutBtn, "main/resources/HamsterPut24.png");
+
+        ToggleButton playBtn = new ToggleButton();
+        ToggleButton pauseBtn = new ToggleButton();
+        ToggleButton stopBtn = new ToggleButton();
+        quickToggleButtonIcon(playBtn, "main/resources/play24.gif");
+        quickToggleButtonIcon(pauseBtn, "main/resources/pause24.gif");
+        quickToggleButtonIcon(stopBtn, "main/resources/stop24.gif");
+        ToggleGroup playPauseBtnTg = new ToggleGroup();
+        playPauseBtnTg.getToggles().addAll(playBtn, pauseBtn, stopBtn);
+
+        toolBar.getItems().addAll(
+                createNewFileBtn,
+                openFileBtn,
+                new Separator(),
+                saveFileBtn,
+                compileFileBtn,
+                new Separator(),
+                resizeBtn,
+                hamsterBtn,
+                cornBtn,
+                wallBtn,
+                new Separator(),
+                hamsterCornBtn,
+                hamsterLeftBtn,
+                hamsterMoveBtn,
+                hamsterPickBtn,
+                hamsterPutBtn,
+                new Separator(),
+                playBtn,
+                pauseBtn,
+                stopBtn,
+                new Separator(),
+                new Slider()
+        );
         return toolBar;
     }
 
@@ -198,8 +256,29 @@ public class MenuBuilder {
             return;
         }
         ImageView imageView = new ImageView(iconImage);
-        imageView.setFitHeight(32);
-        imageView.setFitWidth(32);
+        imageView.setFitHeight(24);
+        imageView.setFitWidth(24);
+        button.setGraphic(imageView);
+
+    }
+
+    /**
+     * helper method to make assigning images to Buttons easier
+     *
+     * @param button
+     * @param filepath
+     */
+    private void quickToggleButtonIcon(ToggleButton button, String filepath) {
+        Image iconImage;
+        try {
+            iconImage = new Image(getClass().getResource(filepath).toString());
+        } catch (NullPointerException e) {
+            System.out.println("Bild bei " + filepath + " nicht gefunden!");
+            return;
+        }
+        ImageView imageView = new ImageView(iconImage);
+        imageView.setFitHeight(24);
+        imageView.setFitWidth(24);
         button.setGraphic(imageView);
 
     }
