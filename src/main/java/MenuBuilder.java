@@ -33,6 +33,7 @@ public class MenuBuilder {
 
         splitPane.getItems().addAll(codeEditor, territory);
         Scene scene = new Scene(root, 940, 650);
+
         return scene;
     }
 
@@ -144,16 +145,21 @@ public class MenuBuilder {
         ToolBar toolBar = new ToolBar();
         Button createNewFileBtn = new Button();
         quickButtonIcon(createNewFileBtn, "main/resources/new24.gif");
+        createNewFileBtn.setTooltip(new Tooltip("Neues Programm erstellen"));
         Button openFileBtn = new Button();
         quickButtonIcon(openFileBtn, "main/resources/open24.gif");
+        openFileBtn.setTooltip(new Tooltip("Programm öffnen"));
 
         Button saveFileBtn = new Button();
         quickButtonIcon(saveFileBtn, "main/resources/save24.gif");
+        saveFileBtn.setTooltip(new Tooltip("Programm speichern"));
         Button compileFileBtn = new Button();
         quickButtonIcon(compileFileBtn, "main/resources/compile24.gif");
+        compileFileBtn.setTooltip(new Tooltip("Kompilieren"));
 
         Button resizeBtn = new Button();
         quickButtonIcon(resizeBtn, "main/resources/Terrain24.gif");
+        resizeBtn.setTooltip(new Tooltip("Größe ändern..."));
 
         hamsterBtn = new ToggleButton();
         ToggleButton cornBtn = new ToggleButton();
@@ -163,6 +169,11 @@ public class MenuBuilder {
         quickToggleButtonIcon(cornBtn, "main/resources/corn24.gif");
         quickToggleButtonIcon(wallBtn, "main/resources/wall24.gif");
         quickToggleButtonIcon(deleteBtn, "main/resources/Delete24.gif");
+        hamsterBtn.setTooltip(new Tooltip("Hamster platzieren"));
+        cornBtn.setTooltip(new Tooltip("Korn platzieren"));
+        wallBtn.setTooltip(new Tooltip("Mauer platzieren"));
+        deleteBtn.setTooltip(new Tooltip("Kachel löschen"));
+
         hamsterpos = 3;
         hamsterBtn.setOnAction(event -> {
             int i = (int) (Math.floor(Math.random() * 4));
@@ -183,6 +194,11 @@ public class MenuBuilder {
         quickButtonIcon(hamsterMoveBtn, "main/resources/HamsterMove24.png");
         quickButtonIcon(hamsterPickBtn, "main/resources/HamsterPick24.png");
         quickButtonIcon(hamsterPutBtn, "main/resources/HamsterPut24.png");
+        hamsterCornBtn.setTooltip(new Tooltip("Körner im Maul..."));
+        hamsterLeftBtn.setTooltip(new Tooltip("linksUm"));
+        hamsterMoveBtn.setTooltip(new Tooltip("vor"));
+        hamsterPickBtn.setTooltip(new Tooltip("nimm"));
+        hamsterPutBtn.setTooltip(new Tooltip("gib"));
 
         ToggleButton playBtn = new ToggleButton();
         ToggleButton pauseBtn = new ToggleButton();
@@ -190,6 +206,9 @@ public class MenuBuilder {
         quickToggleButtonIcon(playBtn, "main/resources/play24.gif");
         quickToggleButtonIcon(pauseBtn, "main/resources/pause24.gif");
         quickToggleButtonIcon(stopBtn, "main/resources/stop24.gif");
+        playBtn.setTooltip(new Tooltip("Start/Fortsetzen"));
+        pauseBtn.setTooltip(new Tooltip("Pause"));
+        stopBtn.setTooltip(new Tooltip("Stopp"));
         ToggleGroup playPauseBtnTg = new ToggleGroup();
         playPauseBtnTg.getToggles().addAll(playBtn, pauseBtn, stopBtn);
 

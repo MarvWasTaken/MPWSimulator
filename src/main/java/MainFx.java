@@ -13,6 +13,8 @@ public class MainFx extends Application {
         Scene scene = mb.buildScene();
         stage.setScene(scene);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("main/resources/Hamster24.png")));
+        stage.setMinWidth(950);
+        stage.setMinHeight(650);
         stage.show();
     }
 
