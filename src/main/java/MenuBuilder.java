@@ -284,10 +284,10 @@ public class MenuBuilder {
     /**
      * helper method to make assigning images to Buttons easier
      *
-     * @param button
+     * @param toggleButton
      * @param filepath
      */
-    private void quickToggleButtonIcon(ToggleButton button, String filepath) {
+    private void quickToggleButtonIcon(ToggleButton toggleButton, String filepath) {
         Image iconImage;
         try {
             iconImage = new Image(getClass().getResource(filepath).toString());
@@ -298,7 +298,7 @@ public class MenuBuilder {
         ImageView imageView = new ImageView(iconImage);
         imageView.setFitHeight(24);
         imageView.setFitWidth(24);
-        button.setGraphic(imageView);
+        toggleButton.setGraphic(imageView);
 
     }
 
