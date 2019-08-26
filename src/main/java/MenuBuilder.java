@@ -23,16 +23,16 @@ public class MenuBuilder {
         TextArea codeEditor = new TextArea();
         Pane territory = new Pane();
         //Filling root with the MenuBar and the subroot.
-        root.setTop(new MenuBuilder().buildMenuBar());
+        root.setTop(this.buildMenuBar());
         root.setCenter(subRootPane);
         //Filling the subroot with the toolbar and the splitpane
-        subRootPane.setTop(new MenuBuilder().buildToolbar());
+        subRootPane.setTop(this.buildToolbar());
         subRootPane.setCenter(splitPane);
         Label statusLabel = new Label("Hallo Dibo");
         subRootPane.setBottom(statusLabel);
 
         splitPane.getItems().addAll(codeEditor, territory);
-        Scene scene = new Scene(root, 940, 650);
+        Scene scene = new Scene(root, 950, 650);
 
         return scene;
     }

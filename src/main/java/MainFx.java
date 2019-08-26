@@ -19,7 +19,7 @@ public class MainFx extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
-
+        //launch();
+        TestAufgabe2.startTest();
     }
 }
