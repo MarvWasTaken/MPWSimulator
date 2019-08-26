@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component LANGUAGE_LEVEL="JDK_1_8" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/target/test-classes"/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
+		<excludeFolder url="file://$MODULE_DIR$/target"/>
+	</contentEntry>
+	<lib name="Maven: org.slf4j:slf4j-simple:1.7.25" scope="TEST"/>
+	<lib name="Maven: org.projectlombok:lombok:1.18.8" scope="PROVIDED"/>
+	<levels>
+		<level name="Maven: org.slf4j:slf4j-api:1.8.0-beta2" value="project"/>
+		<level name="Maven: org.slf4j:slf4j-simple:1.7.25" value="project"/>
+		<level name="Maven: org.projectlombok:lombok:1.18.8" value="project"/>
+	</levels>
+</component>
