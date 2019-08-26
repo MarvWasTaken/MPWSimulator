@@ -1,3 +1,6 @@
+import exception.ActorOutOfCollectiblesException;
+import exception.CollectibleCountMayNotBeNegativeException;
+import exception.OutOfFieldException;
 import exception.TileEmptyException;
 
 public class Actor extends Inhabitant{
@@ -23,30 +26,39 @@ public class Actor extends Inhabitant{
         this.direction %= 4;
     }
 
-    public boolean vornFrei(Territory territory){
+    public boolean vornFrei(Territory territory) throws OutOfFieldException {
         switch (this.direction){
             case NORTH:
                 if(yPos >= 1){
                     return (territory.getTiles()[yPos-1][xPos])>=0;
+                } else {
+                    throw new OutOfFieldException();
                 }
             case EAST:
                 if(xPos<(territory.getTiles()[yPos].length-1)){
                     return (territory.getTiles()[yPos][xPos+1])>=0;
+                } else {
+                    throw new OutOfFieldException();
                 }
             case SOUTH:
                 if(yPos<(territory.getTiles().length-1)){
                     return (territory.getTiles()[yPos+1][xPos])>=0;
+                } else {
+                    throw new OutOfFieldException();
                 }
             case WEST:
                 if(xPos>=1){
                     return (territory.getTiles()[yPos][xPos-1])>=0;
+                }
+                else {
+                    throw new OutOfFieldException();
                 }
             default:
                 return false;
         }
     }
 
-    public void move() {
+    public void move() throws OutOfFieldException {
         if(vornFrei(this.territory)){
             switch (this.direction){
                 case NORTH:
@@ -73,7 +85,10 @@ public class Actor extends Inhabitant{
             throw new TileEmptyException();
         }
     }
-    public void gib(){
+    public void gib() throws ActorOutOfCollectiblesException {
+        if(this.getNumberOfCollectibles()<=0){
+            throw new ActorOutOfCollectiblesException();
+        }
         if(this.territory.getTiles()[this.yPos][this.xPos] < 9){
             this.territory.getTiles()[this.yPos][this.xPos]++;
             this.numberOfCollectibles--;

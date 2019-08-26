@@ -1,10 +1,16 @@
+import exception.CollectibleCountMayNotBeNegativeException;
+import exception.ObstacleNotPossibleException;
+
 public class Territory {
 
     public final int WALL_ON_TILE = -1;
     private Actor actor;
     private int [][] tiles;
 
-    public void setCollectiblesCount(int yPos, int xPos, int count){
+    public void setCollectiblesCount(int yPos, int xPos, int count) throws CollectibleCountMayNotBeNegativeException {
+        if(count < 0){
+            throw new CollectibleCountMayNotBeNegativeException();
+        }
         tiles[yPos][xPos] = count;
     }
 
@@ -25,9 +31,9 @@ public class Territory {
         return actor;
     }
 
-    public void addObstacle(int yPos, int xPos){
+    public void addObstacle(int yPos, int xPos) throws ObstacleNotPossibleException {
         if(yPos == this.actor.getyPos() && xPos == this.actor.getxPos()){
-            System.out.println("An dieser Stelle kann kein hindernis Platziert werden!");
+            throw new ObstacleNotPossibleException();
         } else {
             this.tiles[yPos][xPos] = -1;
         }

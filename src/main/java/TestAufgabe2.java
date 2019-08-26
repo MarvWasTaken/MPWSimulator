@@ -1,11 +1,14 @@
+import exception.*;
+
 public class TestAufgabe2 {
-    static void startTest(){
+    static void startTest() throws OutOfFieldException, TileEmptyException, ObstacleNotPossibleException, ActorOutOfCollectiblesException, CollectibleCountMayNotBeNegativeException {
         System.out.println("durchlauf1:");
         Territory t = new Territory(5, 5);
         t.addObstacle(1,0);
         t.addObstacle(1,1);
         t.addObstacle(1,2);
         t.addObstacle(1,3);
+        t.setCollectiblesCount(4,4,9);
         t.print();
         boolean running = true;
         while (running){
