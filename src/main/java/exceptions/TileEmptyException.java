@@ -1,4 +1,4 @@
-package exception;
+package exceptions;
 
 public class TileEmptyException extends Exception {
     public TileEmptyException(){

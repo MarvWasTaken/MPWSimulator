@@ -1,4 +1,4 @@
-import exception.*;
+import exceptions.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -20,7 +20,7 @@ public class MainFx extends Application {
     }
 
     public static void main(String[] args) throws TileEmptyException, OutOfFieldException, ObstacleNotPossibleException, ActorOutOfCollectiblesException, CollectibleCountMayNotBeNegativeException {
-        //launch();
-        TestAufgabe2.startTest();
+        launch();
+        //TestAufgabe2.startTest();
     }
 }

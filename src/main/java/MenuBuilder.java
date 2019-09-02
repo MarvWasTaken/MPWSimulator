@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
+import model.Territory;
 
 public class MenuBuilder {
     ToggleButton hamsterBtn;
@@ -21,7 +21,12 @@ public class MenuBuilder {
         BorderPane subRootPane = new BorderPane();
         SplitPane splitPane = new SplitPane();
         TextArea codeEditor = new TextArea();
-        Pane territory = new Pane();
+
+        ScrollPane scrollPane = new ScrollPane();
+        Territory territory = new Territory(20,20);
+        TerritoryPanel territoryPanel = new TerritoryPanel(territory, scrollPane);
+        scrollPane.setContent(territoryPanel);
+
         //Filling root with the MenuBar and the subroot.
         root.setTop(this.buildMenuBar());
         root.setCenter(subRootPane);
@@ -31,7 +36,7 @@ public class MenuBuilder {
         Label statusLabel = new Label("Hallo Dibo");
         subRootPane.setBottom(statusLabel);
 
-        splitPane.getItems().addAll(codeEditor, territory);
+        splitPane.getItems().addAll(codeEditor, scrollPane);
         Scene scene = new Scene(root, 950, 650);
 
         return scene;

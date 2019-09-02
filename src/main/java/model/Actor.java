@@ -1,9 +1,10 @@
-import exception.ActorOutOfCollectiblesException;
-import exception.CollectibleCountMayNotBeNegativeException;
-import exception.OutOfFieldException;
-import exception.TileEmptyException;
+package model;
 
-public class Actor extends Inhabitant{
+import exceptions.ActorOutOfCollectiblesException;
+import exceptions.OutOfFieldException;
+import exceptions.TileEmptyException;
+
+public class Actor {
     private int numberOfCollectibles = 0;
 
 
@@ -15,42 +16,42 @@ public class Actor extends Inhabitant{
     final int WEST = 1;
     final int SOUTH = 2;
     final int EAST = 3;
-    public Actor(int yPos, int xPos){
-        xPos=xPos;
-        yPos=yPos;
+
+    public Actor(int yPos, int xPos) {
+        xPos = xPos;
+        yPos = yPos;
         direction = EAST;
     }
 
-    public void linksUm(){
+    public void linksUm() {
         this.direction += 1;
         this.direction %= 4;
     }
 
     public boolean vornFrei(Territory territory) throws OutOfFieldException {
-        switch (this.direction){
+        switch (this.direction) {
             case NORTH:
-                if(yPos >= 1){
-                    return (territory.getTiles()[yPos-1][xPos])>=0;
+                if (yPos >= 1) {
+                    return (territory.getTiles()[yPos - 1][xPos]) >= 0;
                 } else {
                     throw new OutOfFieldException();
                 }
             case EAST:
-                if(xPos<(territory.getTiles()[yPos].length-1)){
-                    return (territory.getTiles()[yPos][xPos+1])>=0;
+                if (xPos < (territory.getTiles()[yPos].length - 1)) {
+                    return (territory.getTiles()[yPos][xPos + 1]) >= 0;
                 } else {
                     throw new OutOfFieldException();
                 }
             case SOUTH:
-                if(yPos<(territory.getTiles().length-1)){
-                    return (territory.getTiles()[yPos+1][xPos])>=0;
+                if (yPos < (territory.getTiles().length - 1)) {
+                    return (territory.getTiles()[yPos + 1][xPos]) >= 0;
                 } else {
                     throw new OutOfFieldException();
                 }
             case WEST:
-                if(xPos>=1){
-                    return (territory.getTiles()[yPos][xPos-1])>=0;
-                }
-                else {
+                if (xPos >= 1) {
+                    return (territory.getTiles()[yPos][xPos - 1]) >= 0;
+                } else {
                     throw new OutOfFieldException();
                 }
             default:
@@ -59,8 +60,8 @@ public class Actor extends Inhabitant{
     }
 
     public void move() throws OutOfFieldException {
-        if(vornFrei(this.territory)){
-            switch (this.direction){
+        if (vornFrei(this.territory)) {
+            switch (this.direction) {
                 case NORTH:
                     this.yPos--;
                     break;
@@ -78,25 +79,26 @@ public class Actor extends Inhabitant{
     }
 
     public void nimm() throws TileEmptyException {
-        if(this.territory.getTiles()[this.yPos][this.xPos]>0){
+        if (this.territory.getTiles()[this.yPos][this.xPos] > 0) {
             this.numberOfCollectibles++;
             this.territory.getTiles()[this.yPos][this.xPos]--;
         } else {
             throw new TileEmptyException();
         }
     }
+
     public void gib() throws ActorOutOfCollectiblesException {
-        if(this.getNumberOfCollectibles()<=0){
+        if (this.getNumberOfCollectibles() <= 0) {
             throw new ActorOutOfCollectiblesException();
         }
-        if(this.territory.getTiles()[this.yPos][this.xPos] < 9){
+        if (this.territory.getTiles()[this.yPos][this.xPos] < 9) {
             this.territory.getTiles()[this.yPos][this.xPos]++;
             this.numberOfCollectibles--;
         }
     }
 
-    public void printPos(){
-        System.out.println("Y:"+yPos+" X:"+xPos);
+    public void printPos() {
+        System.out.println("Y:" + yPos + " X:" + xPos);
     }
 
     public int getxPos() {
@@ -133,7 +135,7 @@ public class Actor extends Inhabitant{
     }
 
     public String getDirectedSymbol() {
-        switch (this.direction){
+        switch (this.direction) {
             case NORTH:
                 return "^";
             case WEST:

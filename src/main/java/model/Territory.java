@@ -1,9 +1,11 @@
-import exception.CollectibleCountMayNotBeNegativeException;
-import exception.ObstacleNotPossibleException;
+package model;
+
+import exceptions.CollectibleCountMayNotBeNegativeException;
+import exceptions.ObstacleNotPossibleException;
 
 public class Territory {
 
-    public final int WALL_ON_TILE = -1;
+    public final int WALL = -1;
     private Actor actor;
     private int [][] tiles;
 
@@ -35,16 +37,18 @@ public class Territory {
         if(yPos == this.actor.getyPos() && xPos == this.actor.getxPos()){
             throw new ObstacleNotPossibleException();
         } else {
-            this.tiles[yPos][xPos] = -1;
+            this.tiles[yPos][xPos] = WALL;
         }
     }
 
     public void print(){
+        //iteration über die zeilen
         for(int i = 0; i < tiles.length; i++){
+            //iteration über spalten
             for(int j = 0; j < tiles[i].length; j++){
                 if(this.actor.getxPos() == j && this.actor.getyPos() == i){
                     System.out.print(actor.getDirectedSymbol());
-                }else if(tiles[i][j]==-1){
+                }else if(tiles[i][j]== WALL){
                     System.out.print("X");
                 }else{
                     System.out.print(tiles[i][j]);
