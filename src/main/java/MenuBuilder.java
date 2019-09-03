@@ -23,7 +23,7 @@ public class MenuBuilder {
         TextArea codeEditor = new TextArea();
 
         ScrollPane scrollPane = new ScrollPane();
-        Territory territory = new Territory(20,20);
+        Territory territory = new Territory(10,10);
         TerritoryPanel territoryPanel = new TerritoryPanel(territory, scrollPane);
         scrollPane.setContent(territoryPanel);
 
