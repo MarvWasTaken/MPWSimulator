@@ -23,8 +23,7 @@ public class MenuBuilder {
         TextArea codeEditor = new TextArea();
 
         ScrollPane scrollPane = new ScrollPane();
-        Territory territory = new Territory(10,10);
-        TerritoryPanel territoryPanel = new TerritoryPanel(territory, scrollPane);
+        TerritoryPanel territoryPanel = new TerritoryPanel(new Territory(40,40), scrollPane);
         scrollPane.setContent(territoryPanel);
 
         //Filling root with the MenuBar and the subroot.

@@ -16,7 +16,7 @@ public class TerritoryPanel extends Region {
     GraphicsContext gc;
 
     public TerritoryPanel(Territory territory, ScrollPane parent) {
-        canvas = new Canvas(territory.getTiles().length * cellSize * 1.1, territory.getTiles()[0].length * cellSize * 1.1);
+        canvas = new Canvas(territory.getTiles().length * cellSize + 2, territory.getTiles()[0].length * cellSize + 2);
         //canvas = new Canvas(2000, 2000);
 
         //parent.setPrefSize(this.getWidth(), this.getHeight());
