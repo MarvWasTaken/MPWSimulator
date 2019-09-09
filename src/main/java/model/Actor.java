@@ -10,7 +10,18 @@ public class Actor {
 
     private Territory territory;
 
-    private int yPos, xPos, direction;
+    private int yPos;
+    private int xPos;
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
+
+    private int direction;
 
     final int NORTH = 0;
     final int WEST = 1;
@@ -59,37 +70,41 @@ public class Actor {
         }
     }
 
-    public void move() throws OutOfFieldException {
-        if (vornFrei(this.territory)) {
-            switch (this.direction) {
-                case NORTH:
-                    this.yPos--;
-                    break;
-                case EAST:
-                    this.xPos++;
-                    break;
-                case SOUTH:
-                    this.yPos++;
-                    break;
-                case WEST:
-                    this.xPos--;
-                    break;
+    public void move() {
+        try{
+            if (vornFrei(this.territory)) {
+                switch (this.direction) {
+                    case NORTH:
+                        this.yPos--;
+                        break;
+                    case EAST:
+                        this.xPos++;
+                        break;
+                    case SOUTH:
+                        this.yPos++;
+                        break;
+                    case WEST:
+                        this.xPos--;
+                        break;
+                }
             }
+        } catch (OutOfFieldException ofe){
+            ofe.printStackTrace();
         }
     }
 
-    public void nimm() throws TileEmptyException {
+    public void nimm() {
         if (this.territory.getTiles()[this.yPos][this.xPos] > 0) {
             this.numberOfCollectibles++;
             this.territory.getTiles()[this.yPos][this.xPos]--;
         } else {
-            throw new TileEmptyException();
+            new TileEmptyException().printStackTrace();
         }
     }
 
-    public void gib() throws ActorOutOfCollectiblesException {
+    public void gib() {
         if (this.getNumberOfCollectibles() <= 0) {
-            throw new ActorOutOfCollectiblesException();
+            new ActorOutOfCollectiblesException().printStackTrace();
         }
         if (this.territory.getTiles()[this.yPos][this.xPos] < 9) {
             this.territory.getTiles()[this.yPos][this.xPos]++;
