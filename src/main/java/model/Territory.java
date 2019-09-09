@@ -33,9 +33,9 @@ public class Territory {
         return actor;
     }
 
-    public void addObstacle(int yPos, int xPos) throws ObstacleNotPossibleException {
+    public void addObstacle(int yPos, int xPos) {
         if(yPos == this.actor.getyPos() && xPos == this.actor.getxPos()){
-            throw new ObstacleNotPossibleException();
+            new ObstacleNotPossibleException().printStackTrace();
         } else {
             this.tiles[yPos][xPos] = OBSTACLE;
         }

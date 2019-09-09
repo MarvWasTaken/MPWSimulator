@@ -60,9 +60,26 @@ public class MenuBuilder {
         splitPane.getItems().addAll(codeEditor, scrollPane);
         Scene scene = new Scene(root, 950, 650);
 
-        scene.addEventHandler(MouseEvent.ANY, mouseEvent -> {
-            System.out.println(mouseEvent.getX());
-            System.out.println(mouseEvent.getY());
+        territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            int x = (int)(Math.floor(mouseEvent.getX()/TerritoryPanel.CELLSIZE));
+            int y = (int)(Math.floor(mouseEvent.getY()/TerritoryPanel.CELLSIZE));
+            System.out.println(x);
+            System.out.println(y);
+            switch(territoryPanel.getTerritoryMode()){
+                case TerritoryPanel.SETTING_ACTOR:
+                    System.out.println("Ich würd jetzt einen Hamster hier platzieren, wenn ich das denn könnte :(");
+
+                    territoryPanel.getTerritory().getActor().setxPos(x);
+                    territoryPanel.getTerritory().getActor().setyPos(y);
+
+                    break;
+                case TerritoryPanel.SETTING_OBSTACLE:
+                    territoryPanel.getTerritory().addObstacle(y, x);
+                default:
+                    System.out.println("Hat nicht geklappt du Lurch");
+
+            }
+            territoryPanel.draw(scrollPane);
         });
 
         scene.addEventHandler(KeyEvent.ANY, keyEvent -> {

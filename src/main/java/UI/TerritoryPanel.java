@@ -11,18 +11,16 @@ import model.Territory;
 
 public class TerritoryPanel extends Region {
 
-    static final int SETTING_ACTOR = 0;
-    static final int SETTING_OBSTACLE = 1;
-    static final int SETTING_CORN = 2;
-    static final int DELETING_STUFF = 3;
+    public static final int SETTING_ACTOR = 0;
+    public static final int SETTING_OBSTACLE = 1;
+    public static final int SETTING_CORN = 2;
+    public static final int DELETING_STUFF = 3;
 
     private int territoryMode = -1;
 
-    private
+    private Canvas canvas;
 
-    Canvas canvas;
-
-    final static int CELLSIZE = 32;
+    public final static int CELLSIZE = 32;
 
     private Territory territory;
 
@@ -82,6 +80,7 @@ public class TerritoryPanel extends Region {
             canvas.setTranslateY(0);
         }
     }
+
     public void draw(ScrollPane sc) {
         gc.clearRect(0,0,10000,10000);
         gc.setFill(Color.BLACK);
@@ -117,12 +116,11 @@ public class TerritoryPanel extends Region {
     }
 
 
-
     //Getters and Setters
+
     public Territory getTerritory() {
         return territory;
     }
-
     public void setTerritory(Territory territory) {
         this.territory = territory;
     }
@@ -137,4 +135,12 @@ public class TerritoryPanel extends Region {
     }
 
 
+
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+    }
 }
