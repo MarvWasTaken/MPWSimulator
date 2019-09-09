@@ -18,8 +18,8 @@ public class Actor {
     final int EAST = 3;
 
     public Actor(int yPos, int xPos) {
-        xPos = xPos;
-        yPos = yPos;
+        this.xPos = xPos;
+        this.yPos = yPos;
         direction = EAST;
     }
 

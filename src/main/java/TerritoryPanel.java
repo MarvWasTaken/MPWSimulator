@@ -10,13 +10,13 @@ public class TerritoryPanel extends Region {
 
     Canvas canvas;
 
-    final static int cellSize = 32;
+    final static int CELLSIZE = 128;
 
     Territory territory;
     GraphicsContext gc;
 
     public TerritoryPanel(Territory territory, ScrollPane parent) {
-        canvas = new Canvas(territory.getTiles().length * cellSize + 2, territory.getTiles()[0].length * cellSize + 2);
+        canvas = new Canvas(territory.getTiles().length * CELLSIZE + 2, territory.getTiles()[0].length * CELLSIZE + 2);
         //canvas = new Canvas(2000, 2000);
 
         //parent.setPrefSize(this.getWidth(), this.getHeight());
@@ -26,14 +26,16 @@ public class TerritoryPanel extends Region {
         parent.viewportBoundsProperty().addListener((observable)-> this.zentrieren(parent, canvas));
 
         this.territory = territory;
-        territory.getTiles()[1][0] = territory.WALL;
-        territory.getTiles()[1][1] = territory.WALL;
-        territory.getTiles()[1][2] = territory.WALL;
-        territory.getTiles()[1][3] = territory.WALL;
-        territory.getTiles()[6][9] = territory.WALL;
-        territory.getTiles()[7][9] = territory.WALL;
-        territory.getTiles()[8][9] = territory.WALL;
-        territory.getTiles()[9][9] = territory.WALL;
+
+        //Placing Demo Obstacles
+        territory.getTiles()[1][0] = territory.OBSTACLE;
+        territory.getTiles()[1][1] = territory.OBSTACLE;
+        territory.getTiles()[1][2] = territory.OBSTACLE;
+        territory.getTiles()[1][3] = territory.OBSTACLE;
+        territory.getTiles()[6][9] = territory.OBSTACLE;
+        territory.getTiles()[7][9] = territory.OBSTACLE;
+        territory.getTiles()[8][9] = territory.OBSTACLE;
+        territory.getTiles()[9][9] = territory.OBSTACLE;
         territory.getActor().setxPos(5);
         this.gc = canvas.getGraphicsContext2D();
         draw(parent);
@@ -70,26 +72,26 @@ public class TerritoryPanel extends Region {
         gc.setLineWidth(1);
 //        int row = 0;
 
-        double row = (canvas.getHeight()-territory.getTiles().length*cellSize)/2;
-        double column = (canvas.getWidth()-territory.getTiles()[0].length*cellSize)/2;
+        double row = (canvas.getHeight()-territory.getTiles().length* CELLSIZE)/2;
+        double column = (canvas.getWidth()-territory.getTiles()[0].length* CELLSIZE)/2;
 
-        gc.fillRect(row,column, territory.getTiles().length*cellSize, territory.getTiles()[0].length*cellSize);
+        gc.fillRect(row,column, territory.getTiles().length* CELLSIZE, territory.getTiles()[0].length* CELLSIZE);
 
         for (int i = 0; i < territory.getTiles().length; i++) {
             for (int j = 0; j < territory.getTiles()[i].length; j++) {
-                if (territory.getTiles()[j][i] == territory.WALL) {
+                if (territory.getTiles()[j][i] == territory.OBSTACLE) {
                     gc.setFill(Color.RED);
-                    //gc.fillRect(row, (j) * cellSize + column, cellSize, cellSize);
+                    //gc.fillRect(row, (j) * CELLSIZE + column, CELLSIZE, CELLSIZE);
                     Image image = new Image(getClass().getResource("main/resources/Wall32.png").toString());
-                    gc.drawImage(image, row, j * cellSize + column, cellSize, cellSize);
+                    gc.drawImage(image, row, j * CELLSIZE + column, CELLSIZE, CELLSIZE);
                 } else if (territory.getActor().getxPos() == i && territory.getActor().getyPos() == j) {
                     gc.setFill(Color.BLUE);
                     Image image = new Image(getClass().getResource("main/resources/3Hamster32.png").toString());
-                    gc.drawImage(image, row, j * cellSize + column, cellSize, cellSize);
+                    gc.drawImage(image, row, j * CELLSIZE + column, CELLSIZE, CELLSIZE);
                 }
-                gc.strokeRect(row, (j) * cellSize + column, cellSize, cellSize);
+                gc.strokeRect(row, (j) * CELLSIZE + column, CELLSIZE, CELLSIZE);
             }
-            row += cellSize;
+            row += CELLSIZE;
         }
         territory.print();
     }

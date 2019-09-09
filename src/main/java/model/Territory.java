@@ -5,7 +5,7 @@ import exceptions.ObstacleNotPossibleException;
 
 public class Territory {
 
-    public final int WALL = -1;
+    public final int OBSTACLE = -1;
     private Actor actor;
     private int [][] tiles;
 
@@ -37,7 +37,7 @@ public class Territory {
         if(yPos == this.actor.getyPos() && xPos == this.actor.getxPos()){
             throw new ObstacleNotPossibleException();
         } else {
-            this.tiles[yPos][xPos] = WALL;
+            this.tiles[yPos][xPos] = OBSTACLE;
         }
     }
 
@@ -48,7 +48,7 @@ public class Territory {
             for(int j = 0; j < tiles[i].length; j++){
                 if(this.actor.getxPos() == j && this.actor.getyPos() == i){
                     System.out.print(actor.getDirectedSymbol());
-                }else if(tiles[i][j]== WALL){
+                }else if(tiles[i][j]== OBSTACLE){
                     System.out.print("X");
                 }else{
                     System.out.print(tiles[i][j]);
