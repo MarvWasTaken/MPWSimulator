@@ -129,6 +129,9 @@ public class CustomMenuBar extends MenuBar {
             customToolBar.getDeleteBtn().setSelected(!customToolBar.getDeleteBtn().isSelected());
             territoryPanel.setTerritoryMode(TerritoryPanel.DELETING_STUFF);
         });
+        resizeMenuItem.setOnAction(e -> {
+            territoryPanel.startResizeDialog();
+        });
 
         territoriumMenu.getItems().addAll(
                 saveSubMenu,

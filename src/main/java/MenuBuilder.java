@@ -75,6 +75,9 @@ public class MenuBuilder {
                     break;
                 case TerritoryPanel.SETTING_OBSTACLE:
                     territoryPanel.getTerritory().addObstacle(y, x);
+                    break;
+                case TerritoryPanel.SETTING_CORN:
+
                 default:
                     System.out.println("Hat nicht geklappt du Lurch");
 

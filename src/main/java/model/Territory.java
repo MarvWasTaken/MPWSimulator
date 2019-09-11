@@ -41,6 +41,22 @@ public class Territory {
         }
     }
 
+    public void resize(int x, int y) {
+        int newTiles[][] = new int[y][x];
+        for (int i = 0; i < this.tiles.length; i++) {
+            for (int j = 0; j < this.tiles[i].length; j++) {
+                if(i<y && j<x){
+                    newTiles[i][j] = this.tiles[i][j];
+                }
+            }
+        }
+        if(this.actor.getxPos()>=x || this.actor.getyPos() >= y){
+            this.actor.setxPos(0);
+            this.actor.setyPos(0);
+        }
+        this.tiles = newTiles;
+    }
+
     public void print(){
         //iteration über die zeilen
         for(int i = 0; i < tiles.length; i++){
