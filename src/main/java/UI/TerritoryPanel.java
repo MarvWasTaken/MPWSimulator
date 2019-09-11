@@ -19,6 +19,8 @@ public class TerritoryPanel extends Region {
     public static final int SETTING_CORN = 2;
     public static final int DELETING_STUFF = 3;
 
+    private boolean draggingActor = false;
+
     private int territoryMode = -1;
 
     private Canvas canvas;
@@ -55,12 +57,12 @@ public class TerritoryPanel extends Region {
         territory.getTiles()[9][9] = territory.OBSTACLE;
         territory.getActor().setxPos(5);
         this.gc = canvas.getGraphicsContext2D();
-        draw(parent);
+        draw();
 
         canvas.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.UP) {
                 this.territory.getActor().move();
-                draw(parent);
+                draw();
             }
             System.out.println(e.getCode().toString());
         });
@@ -92,8 +94,8 @@ public class TerritoryPanel extends Region {
         /**
          * Using code from https://code.makery.ch/blog/javafx-dialogs-official/
          */
-        TextInputDialog dialog = new TextInputDialog(territory.getTiles().length+","+territory.getTiles()[0].length);
-        dialog.setTitle("Text Input Dialog");
+        TextInputDialog dialog = new TextInputDialog(territory.getTiles()[0].length+","+territory.getTiles().length);
+        dialog.setTitle("Dialog Territorium anpassen ...");
         dialog.setHeaderText("Größe Ändern");
         dialog.setContentText("Bitte gebe die neue Feldgröße ein! \b (x dimension, y dimension. Kommasepariert!) \b Beispiel: \"10,10\"");
         Optional<String> result = dialog.showAndWait();
@@ -106,12 +108,21 @@ public class TerritoryPanel extends Region {
         System.out.println("nothing happened.");
     }
 
+
     public void resize(int x, int y) {
         this.territory.resize(x, y);
-        draw(this.parent);
+        draw();
+    }
+    public void linksUmEventTriggered() {
+        this.territory.getActor().linksUm();
+        draw();
+    }
+    public void moveEventTriggered(){
+        this.territory.getActor().move();
+        draw();
     }
 
-    public void draw(ScrollPane sc) {
+    public void draw() {
         //canvas = new Canvas(territory.getTiles().length * CELLSIZE + 2, territory.getTiles()[0].length * CELLSIZE + 2);
         canvas.setHeight(territory.getTiles().length * CELLSIZE + 2);
         canvas.setWidth(territory.getTiles()[0].length * CELLSIZE + 2);
@@ -175,5 +186,13 @@ public class TerritoryPanel extends Region {
 
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
+    }
+
+    public boolean isDraggingActor() {
+        return draggingActor;
+    }
+
+    public void setDraggingActor(boolean draggingActor) {
+        this.draggingActor = draggingActor;
     }
 }

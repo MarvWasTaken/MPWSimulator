@@ -2,7 +2,13 @@ import UI.CustomMenuBar;
 import UI.CustomToolBar;
 import UI.TerritoryPanel;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -14,13 +20,6 @@ import model.Actor;
 import model.Territory;
 
 public class MenuBuilder {
-    ToggleButton hamsterBtn;
-    int hamsterpos;
-
-    private boolean settingActor;
-    private boolean settingObstacle;
-    private boolean settingCorn;
-    private boolean changingTerritorySize;
 
     public MenuBuilder() {
 
@@ -34,16 +33,9 @@ public class MenuBuilder {
         TextArea codeEditor = new TextArea();
 
         ScrollPane scrollPane = new ScrollPane();
-        TerritoryPanel territoryPanel = new TerritoryPanel(new Territory(12,12), scrollPane);
-        /**territoryPanel.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println(event.getEventType().toString());
-            }
-        });*/
+        TerritoryPanel territoryPanel = new TerritoryPanel(new Territory(12, 12), scrollPane);
 
         scrollPane.setContent(territoryPanel);
-
 
         //Filling root with the MenuBar and the subroot.
         CustomMenuBar menuBar = this.buildMenuBar(territoryPanel);
@@ -60,12 +52,42 @@ public class MenuBuilder {
         splitPane.getItems().addAll(codeEditor, scrollPane);
         Scene scene = new Scene(root, 950, 650);
 
+        territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEvent -> {
+                int x = (int) (Math.floor(mouseEvent.getX() / TerritoryPanel.CELLSIZE));
+                int y = (int) (Math.floor(mouseEvent.getY() / TerritoryPanel.CELLSIZE));
+                if(x == territoryPanel.getTerritory().getActor().getxPos() && y == territoryPanel.getTerritory().getActor().getyPos()) {
+                    territoryPanel.setDraggingActor(true);
+                    System.out.println("Hamster wird gezogen!");
+                } else {
+
+                }
+        });
+
+        territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseEvent -> {
+            if(territoryPanel.isDraggingActor()){
+                int x = (int) (Math.floor(mouseEvent.getX() / TerritoryPanel.CELLSIZE));
+                int y = (int) (Math.floor(mouseEvent.getY() / TerritoryPanel.CELLSIZE));
+                    if(y<territoryPanel.getTerritory().getTiles().length
+                            && x<territoryPanel.getTerritory().getTiles()[0].length
+                            && territoryPanel.getTerritory().getTiles()[y][x]!=-1 ){
+                        territoryPanel.getTerritory().getActor().setxPos(x);
+                        territoryPanel.getTerritory().getActor().setyPos(y);
+                    }
+                territoryPanel.draw();
+            }
+        });
+
+        territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_RELEASED, mouseEvent -> {
+            territoryPanel.setDraggingActor(false);
+            System.out.println("Hamster wird nicht mehr gezogen!");
+        });
+
         territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            int x = (int)(Math.floor(mouseEvent.getX()/TerritoryPanel.CELLSIZE));
-            int y = (int)(Math.floor(mouseEvent.getY()/TerritoryPanel.CELLSIZE));
+            int x = (int) (Math.floor(mouseEvent.getX() / TerritoryPanel.CELLSIZE));
+            int y = (int) (Math.floor(mouseEvent.getY() / TerritoryPanel.CELLSIZE));
             System.out.println(x);
             System.out.println(y);
-            switch(territoryPanel.getTerritoryMode()){
+            switch (territoryPanel.getTerritoryMode()) {
                 case TerritoryPanel.SETTING_ACTOR:
                     System.out.println("Ich würd jetzt einen Hamster hier platzieren, wenn ich das denn könnte :(");
 
@@ -77,18 +99,20 @@ public class MenuBuilder {
                     territoryPanel.getTerritory().addObstacle(y, x);
                     break;
                 case TerritoryPanel.SETTING_CORN:
-
+                    break;
+                case TerritoryPanel.DELETING_STUFF:
+                    territoryPanel.getTerritory().getTiles()[y][x] = 0;
                 default:
                     System.out.println("Hat nicht geklappt du Lurch");
 
             }
-            territoryPanel.draw(scrollPane);
+            territoryPanel.draw();
         });
 
         scene.addEventHandler(KeyEvent.ANY, keyEvent -> {
             Actor a = territoryPanel.getTerritory().getActor();
             System.out.println(keyEvent.getCode().toString());
-            switch (keyEvent.getCode()){
+            switch (keyEvent.getCode()) {
                 case UP:
                     a.move();
                     break;
@@ -104,13 +128,13 @@ public class MenuBuilder {
                 default:
                     break;
             }
-            territoryPanel.draw(scrollPane);
+            territoryPanel.draw();
         });
 
-        scene.setOnKeyPressed(e->{
-            if(e.getCode() == KeyCode.UP){
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.UP) {
                 territoryPanel.getTerritory().getActor().move();
-                territoryPanel.draw(scrollPane);
+                territoryPanel.draw();
                 System.out.println("gemacht!");
             }
             System.out.println(e.getCode().toString());

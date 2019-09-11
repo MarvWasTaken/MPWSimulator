@@ -116,6 +116,9 @@ public class CustomToolBar extends ToolBar{
         hamsterPickBtn.setTooltip(new Tooltip("nimm"));
         hamsterPutBtn.setTooltip(new Tooltip("gib"));
 
+        hamsterLeftBtn.setOnMousePressed(event -> territoryPanel.linksUmEventTriggered());
+        hamsterMoveBtn.setOnMousePressed(event -> territoryPanel.moveEventTriggered());
+
         playBtn = new ToggleButton();
         pauseBtn = new ToggleButton();
         stopBtn = new ToggleButton();
