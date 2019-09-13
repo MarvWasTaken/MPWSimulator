@@ -97,6 +97,7 @@ public class Actor {
         if (this.territory.getTiles()[this.yPos][this.xPos] > 0) {
             this.numberOfCollectibles++;
             this.territory.getTiles()[this.yPos][this.xPos]--;
+            System.out.println("es sind noch "+this.territory.getTiles()[this.yPos][this.xPos]+" Körner auf dem Feld.");
         } else {
             new TileEmptyException().printStackTrace();
         }
@@ -105,10 +106,10 @@ public class Actor {
     public void gib() {
         if (this.getNumberOfCollectibles() <= 0) {
             new ActorOutOfCollectiblesException().printStackTrace();
-        }
-        if (this.territory.getTiles()[this.yPos][this.xPos] < 9) {
+        } else if (this.territory.getTiles()[this.yPos][this.xPos] < 12) {
             this.territory.getTiles()[this.yPos][this.xPos]++;
             this.numberOfCollectibles--;
+            System.out.println("Noch "+this.numberOfCollectibles+" Körner im Maul.");
         }
     }
 

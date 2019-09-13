@@ -114,20 +114,44 @@ public class CustomMenuBar extends MenuBar {
         insertDeleteTg.getToggles().addAll(placeHamsterMenuItem, placeKornMenuItem, placeWallMenuItem, deleteFieldMenuItem);
         //Verheiraten der ToggleMenuItems mit den korrespondierenden ToggleButtons
         placeHamsterMenuItem.setOnAction(e -> {
-            customToolBar.getHamsterBtn().setSelected(!customToolBar.getHamsterBtn().isSelected());
-            territoryPanel.setTerritoryMode(TerritoryPanel.SETTING_ACTOR);
+            if (customToolBar.getHamsterBtn().isSelected()) {
+                customToolBar.getHamsterBtn().setSelected(false);
+                placeHamsterMenuItem.setSelected(false);
+                territoryPanel.setTerritoryMode(TerritoryPanel.DOING_NOTHING);
+            } else {
+                customToolBar.getHamsterBtn().setSelected(true);
+                territoryPanel.setTerritoryMode(TerritoryPanel.SETTING_ACTOR);
+            }
         });
         placeKornMenuItem.setOnAction(e -> {
-            customToolBar.getCornBtn().setSelected(!customToolBar.getCornBtn().isSelected());
-            territoryPanel.setTerritoryMode(TerritoryPanel.SETTING_CORN);
+            if (customToolBar.getCornBtn().isSelected()) {
+                customToolBar.getCornBtn().setSelected(false);
+                placeKornMenuItem.setSelected(false);
+                territoryPanel.setTerritoryMode(TerritoryPanel.DOING_NOTHING);
+            } else {
+                customToolBar.getCornBtn().setSelected(true);
+                territoryPanel.setTerritoryMode(TerritoryPanel.SETTING_CORN);
+            }
         });
         placeWallMenuItem.setOnAction(e -> {
-            customToolBar.getWallBtn().setSelected(!customToolBar.getWallBtn().isSelected());
-            territoryPanel.setTerritoryMode(TerritoryPanel.SETTING_OBSTACLE);
+            if (customToolBar.getCornBtn().isSelected()) {
+                customToolBar.getCornBtn().setSelected(false);
+                placeWallMenuItem.setSelected(false);
+                territoryPanel.setTerritoryMode(TerritoryPanel.DOING_NOTHING);
+            } else {
+                customToolBar.getWallBtn().setSelected(true);
+                territoryPanel.setTerritoryMode(TerritoryPanel.SETTING_OBSTACLE);
+            }
         });
         deleteFieldMenuItem.setOnAction(e -> {
-            customToolBar.getDeleteBtn().setSelected(!customToolBar.getDeleteBtn().isSelected());
-            territoryPanel.setTerritoryMode(TerritoryPanel.DELETING_STUFF);
+            if(customToolBar.getDeleteBtn().isSelected()){
+                customToolBar.getDeleteBtn().setSelected(false);
+                deleteFieldMenuItem.setSelected(false);
+                territoryPanel.setTerritoryMode(TerritoryPanel.DOING_NOTHING);
+            } else {
+                customToolBar.getDeleteBtn().setSelected(true);
+                territoryPanel.setTerritoryMode(TerritoryPanel.DELETING_STUFF);
+            }
         });
         resizeMenuItem.setOnAction(e -> {
             territoryPanel.startResizeDialog();

@@ -75,6 +75,7 @@ public class MenuBuilder {
                     }
                 territoryPanel.draw();
             }
+            System.out.println("dragged!");
         });
 
         territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_RELEASED, mouseEvent -> {
@@ -89,19 +90,18 @@ public class MenuBuilder {
             System.out.println(y);
             switch (territoryPanel.getTerritoryMode()) {
                 case TerritoryPanel.SETTING_ACTOR:
-                    System.out.println("Ich würd jetzt einen Hamster hier platzieren, wenn ich das denn könnte :(");
-
                     territoryPanel.getTerritory().getActor().setxPos(x);
                     territoryPanel.getTerritory().getActor().setyPos(y);
-
                     break;
                 case TerritoryPanel.SETTING_OBSTACLE:
                     territoryPanel.getTerritory().addObstacle(y, x);
                     break;
                 case TerritoryPanel.SETTING_CORN:
+                    territoryPanel.getTerritory().addCorn(y,x);
                     break;
                 case TerritoryPanel.DELETING_STUFF:
                     territoryPanel.getTerritory().getTiles()[y][x] = 0;
+                    break;
                 default:
                     System.out.println("Hat nicht geklappt du Lurch");
 
@@ -109,7 +109,7 @@ public class MenuBuilder {
             territoryPanel.draw();
         });
 
-        scene.addEventHandler(KeyEvent.ANY, keyEvent -> {
+        scene.addEventHandler(KeyEvent.KEY_RELEASED, keyEvent -> {
             Actor a = territoryPanel.getTerritory().getActor();
             System.out.println(keyEvent.getCode().toString());
             switch (keyEvent.getCode()) {

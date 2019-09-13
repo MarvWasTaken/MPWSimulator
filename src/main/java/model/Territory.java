@@ -41,6 +41,14 @@ public class Territory {
         }
     }
 
+    public void addCorn(int yPos, int xPos) {
+        if(this.tiles[yPos][xPos] != -1 && this.tiles[yPos][xPos] < 12){
+            this.tiles[yPos][xPos]++;
+        } else {
+            new Exception("No Corn may be placed here.").printStackTrace();
+        }
+    }
+
     public void resize(int x, int y) {
         int newTiles[][] = new int[y][x];
         for (int i = 0; i < this.tiles.length; i++) {

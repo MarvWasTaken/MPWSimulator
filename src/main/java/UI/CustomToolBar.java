@@ -10,6 +10,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import model.Territory;
 
 import java.util.Optional;
 
@@ -78,19 +79,23 @@ public class CustomToolBar extends ToolBar{
             hamsterDirection %= 4;
             quickToggleButtonIcon(hamsterBtn, "" + hamsterDirection + "Hamster32.png");
             customMenuBar.getPlaceHamsterMenuItem().setSelected(!customMenuBar.getPlaceHamsterMenuItem().isSelected());
-            territoryPanel.setTerritoryMode(TerritoryPanel.SETTING_ACTOR);
+            int newMode = territoryPanel.getTerritoryMode() == TerritoryPanel.SETTING_ACTOR ? TerritoryPanel.DOING_NOTHING : TerritoryPanel.SETTING_ACTOR;
+            territoryPanel.setTerritoryMode(newMode);
         });
         cornBtn.setOnMousePressed(event -> {
             customMenuBar.getPlaceKornMenuItem().setSelected(!customMenuBar.getPlaceKornMenuItem().isSelected());
-            territoryPanel.setTerritoryMode(TerritoryPanel.SETTING_CORN);
+            int newMode = territoryPanel.getTerritoryMode() == TerritoryPanel.SETTING_CORN ? TerritoryPanel.DOING_NOTHING : TerritoryPanel.SETTING_CORN;
+            territoryPanel.setTerritoryMode(newMode);
         });
         wallBtn.setOnMousePressed(event -> {
             customMenuBar.getPlaceWallMenuItem().setSelected(!customMenuBar.getPlaceWallMenuItem().isSelected());
-            territoryPanel.setTerritoryMode(TerritoryPanel.SETTING_OBSTACLE);
+            int newMode = territoryPanel.getTerritoryMode() == TerritoryPanel.SETTING_OBSTACLE ? TerritoryPanel.DOING_NOTHING : TerritoryPanel.SETTING_OBSTACLE;
+            territoryPanel.setTerritoryMode(newMode);
         });
         deleteBtn.setOnMousePressed(event -> {
             customMenuBar.getDeleteFieldMenuItem().setSelected(!customMenuBar.getDeleteFieldMenuItem().isSelected());
-            territoryPanel.setTerritoryMode(TerritoryPanel.DELETING_STUFF);
+            int newMode = territoryPanel.getTerritoryMode() == TerritoryPanel.DELETING_STUFF ? TerritoryPanel.DOING_NOTHING : TerritoryPanel.DELETING_STUFF;
+            territoryPanel.setTerritoryMode(newMode);
         });
         resizeBtn.setOnMousePressed(event -> {
             territoryPanel.startResizeDialog();

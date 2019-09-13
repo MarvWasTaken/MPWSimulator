@@ -1,11 +1,14 @@
 package UI;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import model.Territory;
@@ -14,6 +17,7 @@ import java.util.Optional;
 
 public class TerritoryPanel extends Region {
 
+    public static final int DOING_NOTHING = -1;
     public static final int SETTING_ACTOR = 0;
     public static final int SETTING_OBSTACLE = 1;
     public static final int SETTING_CORN = 2;
@@ -98,12 +102,24 @@ public class TerritoryPanel extends Region {
         dialog.setTitle("Dialog Territorium anpassen ...");
         dialog.setHeaderText("Größe Ändern");
         dialog.setContentText("Bitte gebe die neue Feldgröße ein! \b (x dimension, y dimension. Kommasepariert!) \b Beispiel: \"10,10\"");
+        //Listener added to dialog text property. this ensures that only valid
+        dialog.getEditor().textProperty().addListener((event, oldValue, newValue) -> {
+            if(newValue.matches("^\\d+,?(\\d+$)?") || newValue.equals("")){
+                dialog.getEditor().setText(newValue);
+            } else {
+                dialog.getEditor().setText(oldValue);
+            }
+        });
         Optional<String> result = dialog.showAndWait();
+
+
         result.ifPresent(newDimensions -> {
-            int x = Integer.valueOf(newDimensions.substring(0, newDimensions.indexOf(',')));
-            int y = Integer.valueOf(newDimensions.substring(newDimensions.indexOf(',')+1));
-            resize(x,y);
-            return;
+            if(result.get().matches("^\\d+,(\\d+$)")){
+                int x = Integer.valueOf(newDimensions.substring(0, newDimensions.indexOf(',')));
+                int y = Integer.valueOf(newDimensions.substring(newDimensions.indexOf(',')+1));
+                resize(x,y);
+                return;
+            }
         });
         System.out.println("nothing happened.");
     }
@@ -151,12 +167,15 @@ public class TerritoryPanel extends Region {
                     gc.setFill(Color.BLUE);
                     Image image = new Image(getClass().getResource("../main/resources/" + this.getTerritory().getActor().getDirection() + "Hamster32.png").toString());
                     gc.drawImage(image,  j * CELLSIZE + column, row, CELLSIZE, CELLSIZE);
+                } else if (territory.getTiles()[i][j]>0){
+                    Image image = new Image(getClass().getResource("../main/resources/" + this.getTerritory().getTiles()[i][j] + "Corn32.png").toString());
+                    gc.drawImage(image,  j * CELLSIZE + column, row, CELLSIZE, CELLSIZE);
                 }
                 gc.strokeRect( (j) * CELLSIZE + column, row, CELLSIZE, CELLSIZE);
             }
             row += CELLSIZE;
         }
-        territory.print();
+        //territory.print();
     }
 
 
