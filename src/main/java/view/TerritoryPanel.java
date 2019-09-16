@@ -1,10 +1,12 @@
 package view;
 
+import contoller.ProgrammController;
 import contoller.WindowController;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -154,6 +156,7 @@ public class TerritoryPanel extends Region {
         System.out.println("new Stage created!");
 
         result.ifPresent(fileName -> {
+            ProgrammController.makeProgrammFile(fileName);
             new WindowController()
                     .prepareStage(
                             new Stage(),
@@ -161,7 +164,6 @@ public class TerritoryPanel extends Region {
                             fileName);
 
         });
-        System.out.println("nothing happened.");
     }
 
 

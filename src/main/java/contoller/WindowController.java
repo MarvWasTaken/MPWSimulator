@@ -1,5 +1,6 @@
 package contoller;
 
+import com.sun.tools.javac.jvm.Code;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -16,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Actor;
 import model.Territory;
+import view.CodeArea;
 import view.CustomMenuBar;
 import view.CustomToolBar;
 import view.TerritoryPanel;
@@ -24,8 +26,10 @@ import java.util.Optional;
 
 public class WindowController {
 
-    public WindowController() {
+    private CodeArea codeArea;
 
+    public WindowController() {
+        codeArea = new CodeArea();
     }
 
     public Scene buildScene(Territory territory) {
@@ -33,7 +37,6 @@ public class WindowController {
         BorderPane root = new BorderPane();
         BorderPane subRootPane = new BorderPane();
         SplitPane splitPane = new SplitPane();
-        TextArea codeEditor = new TextArea();
 
         ScrollPane scrollPane = new ScrollPane();
         TerritoryPanel territoryPanel = new TerritoryPanel(territory, scrollPane);
@@ -52,7 +55,7 @@ public class WindowController {
         Label statusLabel = new Label("Hallo Dibo");
         subRootPane.setBottom(statusLabel);
 
-        splitPane.getItems().addAll(codeEditor, scrollPane);
+        splitPane.getItems().addAll(codeArea, scrollPane);
         Scene scene = new Scene(root, 950, 650);
 
         territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEvent -> {
@@ -163,5 +166,13 @@ public class WindowController {
         stage.setMinWidth(950);
         stage.setMinHeight(650);
         stage.show();
+    }
+
+    public CodeArea getCodeArea() {
+        return codeArea;
+    }
+
+    public void setCodeArea(CodeArea codeArea) {
+        this.codeArea = codeArea;
     }
 }

@@ -14,10 +14,10 @@ public class MainFx extends Application {
         WindowController windowController = new WindowController();
         Territory defaultTerritory = TerritoryFactory.createDefaultTerritory();
         windowController.prepareStage(stage, defaultTerritory, "DefaultHamster");
+        ProgrammController pg = new ProgrammController(windowController.getCodeArea());
     }
 
     public static void main(String[] args) {
-        ProgrammController.makeProgrammDir();
         launch();
         //TestAufgabe2.startTest();
     }
