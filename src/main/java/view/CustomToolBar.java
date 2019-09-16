@@ -1,18 +1,14 @@
-package UI;
+package view;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import model.Territory;
-
-import java.util.Optional;
 
 public class CustomToolBar extends ToolBar{
 

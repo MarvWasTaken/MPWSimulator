@@ -1,14 +1,12 @@
-package UI;
+package view;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import model.Territory;
@@ -98,28 +96,28 @@ public class TerritoryPanel extends Region {
         /**
          * Using code from https://code.makery.ch/blog/javafx-dialogs-official/
          */
-        TextInputDialog dialog = new TextInputDialog(territory.getTiles()[0].length+","+territory.getTiles().length);
+        TextInputDialog dialog = new TextInputDialog(territory.getTiles()[0].length + "," + territory.getTiles().length);
         dialog.setTitle("Dialog Territorium anpassen ...");
         dialog.setHeaderText("Größe Ändern");
-        dialog.setContentText("Bitte gebe die neue Feldgröße ein! \b (x dimension, y dimension. Kommasepariert!) \b Beispiel: \"10,10\"");
+        dialog.setContentText("Bitte gebe die neue Feldgröße ein! \b (x dimension, y dimension. Kommasepariert!) \b Beispiel: \"10,10\" \b Höchstens 100x100!");
         //Listener added to dialog text property. this ensures that only valid
         dialog.getEditor().textProperty().addListener((event, oldValue, newValue) -> {
-            if(newValue.matches("^\\d+,?(\\d+$)?") || newValue.equals("")){
+            if (newValue.matches("^\\d+,?(\\d+$)?") || newValue.equals("")) {
                 dialog.getEditor().setText(newValue);
             } else {
                 dialog.getEditor().setText(oldValue);
             }
-        });
+            dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(!newValue.matches("^\\d+,(\\d+$)"));
+             });
+
+
         Optional<String> result = dialog.showAndWait();
 
-
         result.ifPresent(newDimensions -> {
-            if(result.get().matches("^\\d+,(\\d+$)")){
-                int x = Integer.valueOf(newDimensions.substring(0, newDimensions.indexOf(',')));
-                int y = Integer.valueOf(newDimensions.substring(newDimensions.indexOf(',')+1));
-                resize(x,y);
-                return;
-            }
+            int x = Integer.valueOf(newDimensions.substring(0, newDimensions.indexOf(',')));
+            int y = Integer.valueOf(newDimensions.substring(newDimensions.indexOf(',') + 1));
+            resize(x, y);
+            return;
         });
         System.out.println("nothing happened.");
     }
@@ -129,11 +127,13 @@ public class TerritoryPanel extends Region {
         this.territory.resize(x, y);
         draw();
     }
+
     public void linksUmEventTriggered() {
         this.territory.getActor().linksUm();
         draw();
     }
-    public void moveEventTriggered(){
+
+    public void moveEventTriggered() {
         this.territory.getActor().move();
         draw();
     }
@@ -163,15 +163,18 @@ public class TerritoryPanel extends Region {
                     //gc.fillRect(row, (j) * CELLSIZE + column, CELLSIZE, CELLSIZE);
                     Image image = new Image(getClass().getResource("../main/resources/Wall32.png").toString());
                     gc.drawImage(image, j * CELLSIZE + column, row, CELLSIZE, CELLSIZE);
-                } else if (territory.getActor().getxPos() == j && territory.getActor().getyPos() == i) {
+                } else if (territory.getTiles()[i][j] > 0) {
+                    Image image = new Image(getClass().getResource("../main/resources/" + this.getTerritory().getTiles()[i][j] + "Corn32.png").toString());
+                    gc.drawImage(image, j * CELLSIZE + column, row, CELLSIZE, CELLSIZE);
+                }
+                if (territory.getActor().getxPos() == j && territory.getActor().getyPos() == i) {
                     gc.setFill(Color.BLUE);
                     Image image = new Image(getClass().getResource("../main/resources/" + this.getTerritory().getActor().getDirection() + "Hamster32.png").toString());
-                    gc.drawImage(image,  j * CELLSIZE + column, row, CELLSIZE, CELLSIZE);
-                } else if (territory.getTiles()[i][j]>0){
-                    Image image = new Image(getClass().getResource("../main/resources/" + this.getTerritory().getTiles()[i][j] + "Corn32.png").toString());
-                    gc.drawImage(image,  j * CELLSIZE + column, row, CELLSIZE, CELLSIZE);
+                    gc.drawImage(image, j * CELLSIZE + column, row, CELLSIZE, CELLSIZE);
                 }
-                gc.strokeRect( (j) * CELLSIZE + column, row, CELLSIZE, CELLSIZE);
+
+
+                gc.strokeRect((j) * CELLSIZE + column, row, CELLSIZE, CELLSIZE);
             }
             row += CELLSIZE;
         }

@@ -1,6 +1,6 @@
-import UI.CustomMenuBar;
-import UI.CustomToolBar;
-import UI.TerritoryPanel;
+import view.CustomMenuBar;
+import view.CustomToolBar;
+import view.TerritoryPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -109,7 +109,7 @@ public class MenuBuilder {
             territoryPanel.draw();
         });
 
-        scene.addEventHandler(KeyEvent.KEY_RELEASED, keyEvent -> {
+        scrollPane.addEventHandler(KeyEvent.KEY_RELEASED, keyEvent -> {
             Actor a = territoryPanel.getTerritory().getActor();
             System.out.println(keyEvent.getCode().toString());
             switch (keyEvent.getCode()) {
