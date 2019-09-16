@@ -10,6 +10,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -62,6 +63,11 @@ public class CustomMenuBar extends MenuBar {
         createFileMenuItem = new MenuItem("Neu");
         quickItemAcc(createFileMenuItem, "SHORTCUT+N");
         quickItemIcon(createFileMenuItem, "New16.gif");
+        createFileMenuItem.setOnAction(event -> {
+            territoryPanel.startNewFileDialog();
+        });
+
+
         openFileMenuItem = new MenuItem("Öffnen...");
         quickItemAcc(openFileMenuItem, "SHORTCUT+O");
         quickItemIcon(openFileMenuItem, "Open16.gif");

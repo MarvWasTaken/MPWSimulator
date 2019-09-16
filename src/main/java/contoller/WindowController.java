@@ -1,31 +1,34 @@
-import view.CustomMenuBar;
-import view.CustomToolBar;
-import view.TerritoryPanel;
+package contoller;
+
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import model.Actor;
 import model.Territory;
+import view.CustomMenuBar;
+import view.CustomToolBar;
+import view.TerritoryPanel;
 
-public class MenuBuilder {
+import java.util.Optional;
 
-    public MenuBuilder() {
+public class WindowController {
+
+    public WindowController() {
 
     }
 
-    public Scene buildScene() {
+    public Scene buildScene(Territory territory) {
         //Initializing the central window components
         BorderPane root = new BorderPane();
         BorderPane subRootPane = new BorderPane();
@@ -33,17 +36,17 @@ public class MenuBuilder {
         TextArea codeEditor = new TextArea();
 
         ScrollPane scrollPane = new ScrollPane();
-        TerritoryPanel territoryPanel = new TerritoryPanel(new Territory(12, 12), scrollPane);
+        TerritoryPanel territoryPanel = new TerritoryPanel(territory, scrollPane);
 
         scrollPane.setContent(territoryPanel);
 
         //Filling root with the MenuBar and the subroot.
-        CustomMenuBar menuBar = this.buildMenuBar(territoryPanel);
-        root.setTop(menuBar);
+        CustomMenuBar customMenuBar = this.buildMenuBar(territoryPanel);
+        root.setTop(customMenuBar);
         root.setCenter(subRootPane);
         //Filling the subroot with the toolbar and the splitpane
-        CustomToolBar customToolBar = this.buildToolbar(menuBar);
-        menuBar.setCustomToolBar(customToolBar);
+        CustomToolBar customToolBar = this.buildToolbar(customMenuBar);
+        customMenuBar.setCustomToolBar(customToolBar);
         subRootPane.setTop(customToolBar);
         subRootPane.setCenter(splitPane);
         Label statusLabel = new Label("Hallo Dibo");
@@ -53,26 +56,26 @@ public class MenuBuilder {
         Scene scene = new Scene(root, 950, 650);
 
         territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEvent -> {
-                int x = (int) (Math.floor(mouseEvent.getX() / TerritoryPanel.CELLSIZE));
-                int y = (int) (Math.floor(mouseEvent.getY() / TerritoryPanel.CELLSIZE));
-                if(x == territoryPanel.getTerritory().getActor().getxPos() && y == territoryPanel.getTerritory().getActor().getyPos()) {
-                    territoryPanel.setDraggingActor(true);
-                    System.out.println("Hamster wird gezogen!");
-                } else {
+            int x = (int) (Math.floor(mouseEvent.getX() / TerritoryPanel.CELLSIZE));
+            int y = (int) (Math.floor(mouseEvent.getY() / TerritoryPanel.CELLSIZE));
+            if (x == territoryPanel.getTerritory().getActor().getxPos() && y == territoryPanel.getTerritory().getActor().getyPos()) {
+                territoryPanel.setDraggingActor(true);
+                System.out.println("Hamster wird gezogen!");
+            } else {
 
-                }
+            }
         });
 
         territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseEvent -> {
-            if(territoryPanel.isDraggingActor()){
+            if (territoryPanel.isDraggingActor()) {
                 int x = (int) (Math.floor(mouseEvent.getX() / TerritoryPanel.CELLSIZE));
                 int y = (int) (Math.floor(mouseEvent.getY() / TerritoryPanel.CELLSIZE));
-                    if(y<territoryPanel.getTerritory().getTiles().length
-                            && x<territoryPanel.getTerritory().getTiles()[0].length
-                            && territoryPanel.getTerritory().getTiles()[y][x]!=-1 ){
-                        territoryPanel.getTerritory().getActor().setxPos(x);
-                        territoryPanel.getTerritory().getActor().setyPos(y);
-                    }
+                if (y < territoryPanel.getTerritory().getTiles().length
+                        && x < territoryPanel.getTerritory().getTiles()[0].length
+                        && territoryPanel.getTerritory().getTiles()[y][x] != -1) {
+                    territoryPanel.getTerritory().getActor().setxPos(x);
+                    territoryPanel.getTerritory().getActor().setyPos(y);
+                }
                 territoryPanel.draw();
             }
             System.out.println("dragged!");
@@ -97,7 +100,7 @@ public class MenuBuilder {
                     territoryPanel.getTerritory().addObstacle(y, x);
                     break;
                 case TerritoryPanel.SETTING_CORN:
-                    territoryPanel.getTerritory().addCorn(y,x);
+                    territoryPanel.getTerritory().addCorn(y, x);
                     break;
                 case TerritoryPanel.DELETING_STUFF:
                     territoryPanel.getTerritory().getTiles()[y][x] = 0;
@@ -143,85 +146,22 @@ public class MenuBuilder {
         return scene;
     }
 
-    public CustomMenuBar buildMenuBar(TerritoryPanel territoryPanel) {
-        return new CustomMenuBar(territoryPanel);
 
-    }
+
+    public CustomMenuBar buildMenuBar(TerritoryPanel territoryPanel) { return new CustomMenuBar(territoryPanel); }
 
     public CustomToolBar buildToolbar(CustomMenuBar customMenuBar) {
         return new CustomToolBar(customMenuBar);
     }
 
-    /**
-     * helper method to make assigning images easier
-     *
-     * @param menuItem
-     * @param filepath
-     */
-    private void quickItemIcon(MenuItem menuItem, String filepath) {
-        Image iconImage;
-        try {
-            iconImage = new Image(getClass().getResource(filepath).toString());
-        } catch (NullPointerException e) {
-            System.out.println("Bild bei " + filepath + " nicht gefunden!");
-            return;
-        }
-        ImageView imageView = new ImageView(iconImage);
-        imageView.setFitHeight(16);
-        imageView.setFitWidth(16);
-        menuItem.setGraphic(imageView);
+    public void prepareStage(Stage stage, Territory territory, String fileName) {
+        stage.setTitle("MPW Simulator - "+fileName);
+        Scene scene = this.buildScene(territory);
 
-    }
-
-    /**
-     * helper method to make assigning images to Buttons easier
-     *
-     * @param button
-     * @param filepath
-     */
-    private void quickButtonIcon(Button button, String filepath) {
-        Image iconImage;
-        try {
-            iconImage = new Image(getClass().getResource(filepath).toString());
-        } catch (NullPointerException e) {
-            System.out.println("Bild bei " + filepath + " nicht gefunden!");
-            return;
-        }
-        ImageView imageView = new ImageView(iconImage);
-        imageView.setFitHeight(24);
-        imageView.setFitWidth(24);
-        button.setGraphic(imageView);
-
-    }
-
-    /**
-     * helper method to make assigning images to Buttons easier
-     *
-     * @param toggleButton
-     * @param filepath
-     */
-    private void quickToggleButtonIcon(ToggleButton toggleButton, String filepath) {
-        Image iconImage;
-        try {
-            iconImage = new Image(getClass().getResource(filepath).toString());
-        } catch (NullPointerException e) {
-            System.out.println("Bild bei " + filepath + " nicht gefunden!");
-            return;
-        }
-        ImageView imageView = new ImageView(iconImage);
-        imageView.setFitHeight(24);
-        imageView.setFitWidth(24);
-        toggleButton.setGraphic(imageView);
-
-    }
-
-    /**
-     * helper method to make assigning accelerators easier
-     *
-     * @param item
-     * @param accelerator
-     */
-    static void quickItemAcc(MenuItem item, String accelerator) {
-        item.setAccelerator(KeyCombination.keyCombination(accelerator));
+        stage.setScene(scene);
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("../main/resources/Hamster24.png")));
+        stage.setMinWidth(950);
+        stage.setMinHeight(650);
+        stage.show();
     }
 }

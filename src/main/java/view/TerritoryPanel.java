@@ -1,5 +1,6 @@
 package view;
 
+import contoller.WindowController;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ButtonType;
@@ -9,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import model.Territory;
 
 import java.util.Optional;
@@ -48,15 +50,6 @@ public class TerritoryPanel extends Region {
 
         this.territory = territory;
 
-        //Placing Demo Obstacles
-        territory.getTiles()[1][0] = territory.OBSTACLE;
-        territory.getTiles()[1][1] = territory.OBSTACLE;
-        territory.getTiles()[1][2] = territory.OBSTACLE;
-        territory.getTiles()[1][3] = territory.OBSTACLE;
-        territory.getTiles()[6][9] = territory.OBSTACLE;
-        territory.getTiles()[7][9] = territory.OBSTACLE;
-        territory.getTiles()[8][9] = territory.OBSTACLE;
-        territory.getTiles()[9][9] = territory.OBSTACLE;
         territory.getActor().setxPos(5);
         this.gc = canvas.getGraphicsContext2D();
         draw();
@@ -99,7 +92,7 @@ public class TerritoryPanel extends Region {
         TextInputDialog dialog = new TextInputDialog(territory.getTiles()[0].length + "," + territory.getTiles().length);
         dialog.setTitle("Dialog Territorium anpassen ...");
         dialog.setHeaderText("Größe Ändern");
-        dialog.setContentText("Bitte gebe die neue Feldgröße ein! \b (x dimension, y dimension. Kommasepariert!) \b Beispiel: \"10,10\" \b Höchstens 100x100!");
+        dialog.setContentText("Bitte gebe die neue Feldgröße ein! \b (x dimension, y dimension. Kommasepariert!) \b Beispiel: \"10,10\" \b Höchstens 100,100 mindestens 1,1!");
         //Listener added to dialog text property. this ensures that only valid
         dialog.getEditor().textProperty().addListener((event, oldValue, newValue) -> {
             if (newValue.matches("^\\d+,?(\\d+$)?") || newValue.equals("")) {
@@ -108,7 +101,8 @@ public class TerritoryPanel extends Region {
                 dialog.getEditor().setText(oldValue);
             }
             dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(!newValue.matches("^\\d+,(\\d+$)"));
-             });
+            dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(!newValue.matches("^(100|[1-9][0-9]|[1-9]),(100|[1-9][0-9]|[1-9])$"));
+        });
 
 
         Optional<String> result = dialog.showAndWait();
@@ -118,6 +112,54 @@ public class TerritoryPanel extends Region {
             int y = Integer.valueOf(newDimensions.substring(newDimensions.indexOf(',') + 1));
             resize(x, y);
             return;
+        });
+        System.out.println("nothing happened.");
+    }
+
+    public void startNewFileDialog() {
+        /**
+         * Using code from https://code.makery.ch/blog/javafx-dialogs-official/
+         */
+        String placeholder = "Bitte neuen Dateinamen angeben.";
+        TextInputDialog dialog = new TextInputDialog(placeholder);
+
+        dialog.setTitle("Neues Programm Titel");
+        dialog.setHeaderText("Bitte Dateinamen eingeben.");
+        dialog.setContentText("Führender Buchstabe muss großgeschrieben sein (Java Codeconvention)!");
+        //Listener added to dialog text property. this ensures that only valid
+        dialog.getEditor().textProperty().addListener((event, oldValue, newValue) -> {
+            if (oldValue.equals(placeholder)) {
+                if (newValue.length() > oldValue.length()) {
+                    String substring = newValue.substring(oldValue.length());
+                    if (substring.isEmpty()) {
+                        dialog.getEditor().setText("");
+                    } else {
+                        dialog.getEditor().setText(substring);
+                    }
+                } else {
+                    dialog.getEditor().setText("");
+                }
+            }
+            if (newValue.matches("^[A-Z]([a-z]|[A-Z]|[0-9])*$") || newValue.equals("")) {
+                dialog.getEditor().setText(newValue);
+            } else {
+                dialog.getEditor().setText(oldValue);
+            }
+            dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(!dialog.getEditor().getText().matches("^[A-Z]([a-z]|[A-Z]|[0-9])*$"));
+        });
+
+
+        Optional<String> result = dialog.showAndWait();
+
+        System.out.println("new Stage created!");
+
+        result.ifPresent(fileName -> {
+            new WindowController()
+                    .prepareStage(
+                            new Stage(),
+                            new Territory(10, 10, 5, 5),
+                            fileName);
+
         });
         System.out.println("nothing happened.");
     }

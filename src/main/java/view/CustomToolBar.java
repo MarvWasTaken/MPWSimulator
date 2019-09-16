@@ -10,6 +10,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.awt.event.MouseEvent;
+
 public class CustomToolBar extends ToolBar{
 
 
@@ -38,6 +40,11 @@ public class CustomToolBar extends ToolBar{
         createNewFileBtn = new Button();
         quickButtonIcon(createNewFileBtn, "new24.gif");
         createNewFileBtn.setTooltip(new Tooltip("Neues Programm erstellen"));
+        createNewFileBtn.setOnMouseReleased(event -> {
+            territoryPanel.startNewFileDialog();
+        });
+
+
         openFileBtn = new Button();
         quickButtonIcon(openFileBtn, "open24.gif");
         openFileBtn.setTooltip(new Tooltip("Programm öffnen"));

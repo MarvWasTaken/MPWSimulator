@@ -28,6 +28,18 @@ public class Territory {
 
     }
 
+    public Territory(int height, int width, int actorXPos, int actorYPos){
+        this.tiles = new int[height][width];
+        for(int i = 0; i < tiles.length; i++){
+            for(int j = 0; j < tiles[i].length; j++){
+                tiles[i][j]=0;
+            }
+        }
+        actor = addActor(actorYPos,actorXPos);
+        actor.setTerritory(this);
+
+    }
+
     public Actor addActor(int yPos, int xPos){
         this.actor = new Actor(yPos, xPos);
         return actor;
