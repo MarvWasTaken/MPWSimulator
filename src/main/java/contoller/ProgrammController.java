@@ -50,7 +50,7 @@ public class ProgrammController {
         return programmDirectory;
     }
 
-    public static void makeProgrammFile(String fileName, CodeArea codeArea) {
+    public static boolean makeProgrammFile(String fileName, CodeArea codeArea) {
         String prefix =
                 "package compiled;\n" +
                         "import model.Territory;\n" +
@@ -72,17 +72,13 @@ public class ProgrammController {
                 if (success) {
                     System.out.println("Geil man Porsche Cayman S!");
                     loadProgrammFromFile(file);
-                    return;
+                    return true;
                 }
             } catch (IOException ioe) {
                 System.out.println("File konnte nicht erstellt werden");
             }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle(fileName+" ist bereits vorhanden!");
-            alert.show();
         }
-
+        return false;
     }
 
 

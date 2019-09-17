@@ -1,6 +1,7 @@
 package contoller;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -72,12 +73,19 @@ public class WindowController {
 
 
         result.ifPresent(fileName -> {
-            ProgrammController.makeProgrammFile(fileName, codeArea);
-            new WindowController()
-                    .prepareStage(
-                            new Stage(),
-                            new Territory(10, 10, 5, 5),
-                            fileName);
+            boolean success = ProgrammController.makeProgrammFile(fileName, codeArea);
+            if(success){
+                new WindowController()
+                        .prepareStage(
+                                new Stage(),
+                                new Territory(10, 10, 5, 5),
+                                fileName);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("WARNUNG");
+                alert.setHeaderText(fileName+".java ist bereits vorhanden!");
+                alert.show();
+            }
 
         });
     }
