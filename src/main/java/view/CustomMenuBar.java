@@ -1,5 +1,6 @@
 package view;
 
+import contoller.WindowController;
 import javafx.application.Platform;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -56,7 +57,10 @@ public class CustomMenuBar extends MenuBar {
 
     private CustomToolBar customToolBar;
 
-    public CustomMenuBar(TerritoryPanel territoryPanel) {
+    WindowController windowController;
+
+    public CustomMenuBar(TerritoryPanel territoryPanel, WindowController windowController) {
+        this.windowController = windowController;
         this.territoryPanel = territoryPanel;
         //Das Editor Menü
         editorMenu = new Menu("_Editor");
@@ -64,7 +68,7 @@ public class CustomMenuBar extends MenuBar {
         quickItemAcc(createFileMenuItem, "SHORTCUT+N");
         quickItemIcon(createFileMenuItem, "New16.gif");
         createFileMenuItem.setOnAction(event -> {
-            territoryPanel.startNewFileDialog();
+            windowController.startNewFileDialog();
         });
 
 

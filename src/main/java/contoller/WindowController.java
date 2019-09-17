@@ -1,19 +1,17 @@
 package contoller;
 
-import com.sun.tools.javac.jvm.Code;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Actor;
 import model.Territory;
@@ -22,14 +20,66 @@ import view.CustomMenuBar;
 import view.CustomToolBar;
 import view.TerritoryPanel;
 
+import java.io.File;
 import java.util.Optional;
 
 public class WindowController {
+
+    private Stage stage;
 
     private CodeArea codeArea;
 
     public WindowController() {
         codeArea = new CodeArea();
+    }
+
+    public void startNewFileDialog() {
+        /**
+         * Using code from https://code.makery.ch/blog/javafx-dialogs-official/
+         */
+        String placeholder = "Bitte neuen Dateinamen angeben.";
+        TextInputDialog dialog = new TextInputDialog(placeholder);
+        dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+        dialog.setTitle("Neues Programm Titel");
+        dialog.setHeaderText("Bitte Dateinamen eingeben.");
+        dialog.setContentText("Führender Buchstabe muss großgeschrieben sein (Java Codeconvention)!");
+        //Listener added to dialog text property. this ensures that only valid
+        dialog.getEditor().textProperty().addListener((event, oldValue, newValue) -> {
+            if (oldValue.equals(placeholder)) {
+                if (newValue.length() > oldValue.length()) {
+                    String substring = newValue.substring(oldValue.length());
+                    if (substring.isEmpty()) {
+                        dialog.getEditor().setText("");
+                    } else {
+                        dialog.getEditor().setText(substring);
+                    }
+                } else {
+                    dialog.getEditor().setText("");
+                }
+            }
+            if (newValue.matches("^[A-Z]([a-z]|[A-Z]|[0-9])*$") || newValue.equals("")) {
+                dialog.getEditor().setText(newValue);
+            } else {
+                dialog.getEditor().setText(oldValue);
+            }
+            dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(!dialog.getEditor().getText().matches("^[A-Z]([a-z]|[A-Z]|[0-9])*$"));
+        });
+
+
+        Optional<String> result = dialog.showAndWait();
+
+        System.out.println("new Stage created!");
+
+
+        result.ifPresent(fileName -> {
+            ProgrammController.makeProgrammFile(fileName, codeArea);
+            new WindowController()
+                    .prepareStage(
+                            new Stage(),
+                            new Territory(10, 10, 5, 5),
+                            fileName);
+
+        });
     }
 
     public Scene buildScene(Territory territory) {
@@ -44,11 +94,11 @@ public class WindowController {
         scrollPane.setContent(territoryPanel);
 
         //Filling root with the MenuBar and the subroot.
-        CustomMenuBar customMenuBar = this.buildMenuBar(territoryPanel);
+        CustomMenuBar customMenuBar = this.buildMenuBar(territoryPanel, this);
         root.setTop(customMenuBar);
         root.setCenter(subRootPane);
         //Filling the subroot with the toolbar and the splitpane
-        CustomToolBar customToolBar = this.buildToolbar(customMenuBar);
+        CustomToolBar customToolBar = this.buildToolbar(customMenuBar, this);
         customMenuBar.setCustomToolBar(customToolBar);
         subRootPane.setTop(customToolBar);
         subRootPane.setCenter(splitPane);
@@ -146,19 +196,25 @@ public class WindowController {
             System.out.println(e.getCode().toString());
         });
 
+        customToolBar.getOpenFileBtn().setOnMouseReleased(event ->{
+            loadProgramm();
+        });
+
         return scene;
     }
 
 
+    public CustomMenuBar buildMenuBar(TerritoryPanel territoryPanel, WindowController windowController) {
+        return new CustomMenuBar(territoryPanel, windowController);
+    }
 
-    public CustomMenuBar buildMenuBar(TerritoryPanel territoryPanel) { return new CustomMenuBar(territoryPanel); }
-
-    public CustomToolBar buildToolbar(CustomMenuBar customMenuBar) {
-        return new CustomToolBar(customMenuBar);
+    public CustomToolBar buildToolbar(CustomMenuBar customMenuBar, WindowController windowController) {
+        return new CustomToolBar(customMenuBar, windowController);
     }
 
     public void prepareStage(Stage stage, Territory territory, String fileName) {
-        stage.setTitle("MPW Simulator - "+fileName);
+        this.stage = stage;
+        stage.setTitle("MPW Simulator - " + fileName);
         Scene scene = this.buildScene(territory);
 
         stage.setScene(scene);
@@ -166,6 +222,19 @@ public class WindowController {
         stage.setMinWidth(950);
         stage.setMinHeight(650);
         stage.show();
+    }
+
+    public void loadProgramm(){
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Programm auswählen!");
+        fc.setInitialDirectory(new File(ProgrammController.JAVA_DIRECTORY));
+        File file = fc.showOpenDialog(stage);
+        if(file != null){
+            ProgrammController.loadProgrammFromFile(file);
+        } else {
+            System.out.println("File konnte nicht geladen werden.");
+        }
+
     }
 
     public CodeArea getCodeArea() {

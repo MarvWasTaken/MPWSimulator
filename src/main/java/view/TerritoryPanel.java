@@ -118,53 +118,7 @@ public class TerritoryPanel extends Region {
         System.out.println("nothing happened.");
     }
 
-    public void startNewFileDialog() {
-        /**
-         * Using code from https://code.makery.ch/blog/javafx-dialogs-official/
-         */
-        String placeholder = "Bitte neuen Dateinamen angeben.";
-        TextInputDialog dialog = new TextInputDialog(placeholder);
 
-        dialog.setTitle("Neues Programm Titel");
-        dialog.setHeaderText("Bitte Dateinamen eingeben.");
-        dialog.setContentText("Führender Buchstabe muss großgeschrieben sein (Java Codeconvention)!");
-        //Listener added to dialog text property. this ensures that only valid
-        dialog.getEditor().textProperty().addListener((event, oldValue, newValue) -> {
-            if (oldValue.equals(placeholder)) {
-                if (newValue.length() > oldValue.length()) {
-                    String substring = newValue.substring(oldValue.length());
-                    if (substring.isEmpty()) {
-                        dialog.getEditor().setText("");
-                    } else {
-                        dialog.getEditor().setText(substring);
-                    }
-                } else {
-                    dialog.getEditor().setText("");
-                }
-            }
-            if (newValue.matches("^[A-Z]([a-z]|[A-Z]|[0-9])*$") || newValue.equals("")) {
-                dialog.getEditor().setText(newValue);
-            } else {
-                dialog.getEditor().setText(oldValue);
-            }
-            dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(!dialog.getEditor().getText().matches("^[A-Z]([a-z]|[A-Z]|[0-9])*$"));
-        });
-
-
-        Optional<String> result = dialog.showAndWait();
-
-        System.out.println("new Stage created!");
-
-        result.ifPresent(fileName -> {
-            ProgrammController.makeProgrammFile(fileName);
-            new WindowController()
-                    .prepareStage(
-                            new Stage(),
-                            new Territory(10, 10, 5, 5),
-                            fileName);
-
-        });
-    }
 
 
     public void resize(int x, int y) {

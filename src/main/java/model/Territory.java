@@ -16,6 +16,18 @@ public class Territory {
         tiles[yPos][xPos] = count;
     }
 
+    public Territory(){
+        this.tiles = new int[8][8];
+        for(int i = 0; i < tiles.length; i++){
+            for(int j = 0; j < tiles[i].length; j++){
+                tiles[i][j]=0;
+            }
+        }
+        actor = addActor(0,0);
+        actor.setTerritory(this);
+
+    }
+
     public Territory(int height, int width){
         this.tiles = new int[height][width];
         for(int i = 0; i < tiles.length; i++){

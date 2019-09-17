@@ -1,5 +1,6 @@
 package view;
 
+import contoller.WindowController;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
@@ -35,13 +36,16 @@ public class CustomToolBar extends ToolBar{
 
     private TerritoryPanel territoryPanel;
 
-    public CustomToolBar(CustomMenuBar customMenuBar){
+    private WindowController windowController;
+
+    public CustomToolBar(CustomMenuBar customMenuBar, WindowController windowController){
+        this. windowController = windowController;
         this.territoryPanel = customMenuBar.getTerritoryPanel();
         createNewFileBtn = new Button();
         quickButtonIcon(createNewFileBtn, "new24.gif");
         createNewFileBtn.setTooltip(new Tooltip("Neues Programm erstellen"));
         createNewFileBtn.setOnMouseReleased(event -> {
-            territoryPanel.startNewFileDialog();
+            windowController.startNewFileDialog();
         });
 
 
