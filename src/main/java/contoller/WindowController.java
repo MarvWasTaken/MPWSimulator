@@ -1,5 +1,6 @@
 package contoller;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -27,6 +28,8 @@ import java.util.Optional;
 public class WindowController {
 
     private Stage stage;
+
+    private File file;
 
     private CodeArea codeArea;
 
@@ -74,7 +77,7 @@ public class WindowController {
 
         result.ifPresent(fileName -> {
             boolean success = ProgrammController.makeProgrammFile(fileName, codeArea);
-            if(success){
+            if (success) {
                 new WindowController()
                         .prepareStage(
                                 new Stage(),
@@ -83,11 +86,17 @@ public class WindowController {
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("WARNUNG");
-                alert.setHeaderText(fileName+".java ist bereits vorhanden!");
+                alert.setHeaderText(fileName + ".java ist bereits vorhanden!");
                 alert.show();
             }
 
         });
+    }
+
+    public Scene buildScene(Territory territory, String content) {
+        this.codeArea.setText(content);
+        Scene scene = this.buildScene(territory);
+        return scene;
     }
 
     public Scene buildScene(Territory territory) {
@@ -204,11 +213,21 @@ public class WindowController {
             System.out.println(e.getCode().toString());
         });
 
-        customToolBar.getOpenFileBtn().setOnMouseReleased(event ->{
+        customToolBar.getOpenFileBtn().setOnMouseReleased(event -> {
             loadProgramm();
         });
 
+        customToolBar.getSaveFileBtn().setOnMouseReleased(event -> {
+            saveProgrammCodeToFile(codeArea.getText());
+        });
+
         return scene;
+    }
+
+    public void saveProgrammCodeToFile(String content){
+        if(this.file != null){
+            ProgrammController.saveProgrammCodeToFile(content, this.file);
+        }
     }
 
 
@@ -220,24 +239,42 @@ public class WindowController {
         return new CustomToolBar(customMenuBar, windowController);
     }
 
-    public void prepareStage(Stage stage, Territory territory, String fileName) {
+    public void prepareStage(Stage stage, Territory territory, String fileName, String content, File file) {
+        this.file = file;
         this.stage = stage;
         stage.setTitle("MPW Simulator - " + fileName);
-        Scene scene = this.buildScene(territory);
-
+        Scene scene = this.buildScene(territory, content);
         stage.setScene(scene);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("../main/resources/Hamster24.png")));
         stage.setMinWidth(950);
         stage.setMinHeight(650);
         stage.show();
+        RegistrationController.APPS_RUNNING.add(stage);
+
     }
 
-    public void loadProgramm(){
+    public void prepareStage(Stage stage, Territory territory, String fileName) {
+        this.stage = stage;
+        stage.setTitle("MPW Simulator - " + fileName);
+        Scene scene = this.buildScene(territory);
+        stage.setScene(scene);
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("../main/resources/Hamster24.png")));
+        stage.setMinWidth(950);
+        stage.setMinHeight(650);
+        stage.show();
+        RegistrationController.APPS_RUNNING.add(stage);
+        stage.setOnCloseRequest(event -> {
+            System.out.println("Schließt jetzt!");
+            saveProgrammCodeToFile(codeArea.getText());
+        });
+    }
+
+    public void loadProgramm() {
         FileChooser fc = new FileChooser();
         fc.setTitle("Programm auswählen!");
         fc.setInitialDirectory(new File(ProgrammController.JAVA_DIRECTORY));
         File file = fc.showOpenDialog(stage);
-        if(file != null){
+        if (file != null) {
             ProgrammController.loadProgrammFromFile(file);
         } else {
             System.out.println("File konnte nicht geladen werden.");

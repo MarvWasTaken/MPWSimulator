@@ -88,6 +88,7 @@ public class CustomMenuBar extends MenuBar {
         quickItemAcc(quitMenuItem, "SHORTCUT+Q");
         quitMenuItem.setOnAction(event -> {
             Platform.exit();
+
         });
         editorMenu.getItems().addAll(
                 createFileMenuItem,
