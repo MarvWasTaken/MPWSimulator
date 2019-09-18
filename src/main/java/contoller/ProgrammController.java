@@ -53,8 +53,8 @@ public class ProgrammController {
 
 
         System.out.println(fileName);
-        System.out.println(PROGRAMM_DIRECTORY + fileName);
-        File file = new File(PROGRAMM_DIRECTORY + fileName + ".java");
+        System.out.println(PROGRAMM_DIRECTORY + "\\"+ fileName);
+        File file = new File(PROGRAMM_DIRECTORY +"\\"+ fileName + ".java");
         if (!file.exists()) {
             try {
                 boolean success = file.createNewFile();

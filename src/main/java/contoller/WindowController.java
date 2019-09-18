@@ -249,7 +249,11 @@ public class WindowController {
         stage.setMinHeight(650);
         stage.show();
         RegistrationController.APPS_RUNNING.add(stage);
-
+        stage.setOnCloseRequest(event -> {
+            System.out.println("Schließt jetzt!");
+            saveProgrammCodeToFile(codeArea.getText());
+            RegistrationController.APPS_RUNNING.remove(RegistrationController.getStageForApp(fileName));
+        });
     }
 
     public void prepareStage(Stage stage, Territory territory, String fileName) {
@@ -265,6 +269,7 @@ public class WindowController {
         stage.setOnCloseRequest(event -> {
             System.out.println("Schließt jetzt!");
             saveProgrammCodeToFile(codeArea.getText());
+            RegistrationController.APPS_RUNNING.remove(RegistrationController.getStageForApp(fileName));
         });
     }
 
