@@ -214,13 +214,11 @@ public class WindowController {
             System.out.println(e.getCode().toString());
         });
 
-        customToolBar.getOpenFileBtn().setOnMouseReleased(event -> {
-            loadProgramm();
-        });
+        customToolBar.getOpenFileBtn().setOnMouseReleased(event -> loadProgramm());
 
-        customToolBar.getSaveFileBtn().setOnMouseReleased(event -> {
-            saveProgrammCodeToFile(codeArea.getText());
-        });
+        customToolBar.getSaveFileBtn().setOnMouseReleased(event -> saveProgrammCodeToFile(codeArea.getText()));
+
+        customToolBar.getCompileFileBtn().setOnMouseReleased(event -> compileFile());
 
         return scene;
     }
@@ -268,6 +266,10 @@ public class WindowController {
             System.out.println("Schließt jetzt!");
             saveProgrammCodeToFile(codeArea.getText());
         });
+    }
+
+    public void compileFile(){
+        ProgrammController.compileTerritoryFile(this.file);
     }
 
     public void loadProgramm() {

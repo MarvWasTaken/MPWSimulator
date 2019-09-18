@@ -45,7 +45,6 @@ public class ProgrammController {
 
     public static boolean makeProgrammFile(String fileName, CodeArea codeArea) {
         String prefix =
-//                "package compiled;\n" +
                         "import model.Territory;\n" +
                         "public class " + fileName + " extends Territory{\n" +
                         "\tpublic void main(){\n" +
@@ -77,6 +76,7 @@ public class ProgrammController {
     }
 
     public static Territory compileTerritoryFile(File file){
+        String classNameOfFile = getClassNameOfFile(file);
         JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
         ByteArrayOutputStream err = new ByteArrayOutputStream();
         boolean success =
@@ -84,12 +84,13 @@ public class ProgrammController {
         if (!success) {
             System.out.println(err.toString());
         } else {
+            System.out.println(classNameOfFile+" Compiled successfully!");
             try{
 
                 URL[] urls = new URL[]{new File(PROGRAMM_DIRECTORY).toURI().toURL()};
 
                 URLClassLoader loader = new URLClassLoader(urls);
-                Class<?> territoryClass = loader.loadClass(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf('\\')+1,file.getAbsolutePath().indexOf('.')));
+                Class<?> territoryClass = loader.loadClass(classNameOfFile);
                 return (Territory) territoryClass.newInstance();
 
             } catch (Exception e){
@@ -97,6 +98,10 @@ public class ProgrammController {
             }
         }
         return null;
+    }
+
+    public static String getClassNameOfFile(File file) {
+        return file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf('\\')+1,file.getAbsolutePath().indexOf('.'));
     }
 
     /**
@@ -142,13 +147,13 @@ public class ProgrammController {
 
     public static void saveProgrammCodeToFile(String content, File file) {
         String prefix =
-                "package compiled;\n" +
                         "import model.Territory;\n" +
                         "public class " + file.getName().substring(0, file.getName().indexOf('.')) + " extends Territory{\n";
         String suffix = "\n}";
 
         System.out.println("###########");
         System.out.println(prefix);
+        System.out.println(content);
         System.out.println(suffix);
         System.out.println("###########");
 
