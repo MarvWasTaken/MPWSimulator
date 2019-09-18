@@ -17,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Actor;
 import model.Territory;
+import util.MyAppConstants;
 import view.CodeArea;
 import view.CustomMenuBar;
 import view.CustomToolBar;
@@ -239,11 +240,11 @@ public class WindowController {
         return new CustomToolBar(customMenuBar, windowController);
     }
 
-    public void prepareStage(Stage stage, Territory territory, String fileName, String content, File file) {
+    public void prepareStage(Stage stage, Territory territory, String fileName, File file) {
         this.file = file;
         this.stage = stage;
         stage.setTitle("MPW Simulator - " + fileName);
-        Scene scene = this.buildScene(territory, content);
+        Scene scene = this.buildScene(territory, ProgrammController.getCodeAreaContentFrom(file));
         stage.setScene(scene);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("../main/resources/Hamster24.png")));
         stage.setMinWidth(950);
@@ -272,7 +273,7 @@ public class WindowController {
     public void loadProgramm() {
         FileChooser fc = new FileChooser();
         fc.setTitle("Programm auswählen!");
-        fc.setInitialDirectory(new File(ProgrammController.JAVA_DIRECTORY));
+        fc.setInitialDirectory(new File(MyAppConstants.PROGRAMM_DIRECTORY));
         File file = fc.showOpenDialog(stage);
         if (file != null) {
             ProgrammController.loadProgrammFromFile(file);

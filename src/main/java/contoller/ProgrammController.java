@@ -1,6 +1,7 @@
 package contoller;
 
 import javafx.stage.Stage;
+import model.DefaultTerritory;
 import model.Territory;
 import view.CodeArea;
 
@@ -14,13 +15,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static util.MyAppConstants.PROGRAMM_DIRECTORY;
 
 public class ProgrammController {
     private CodeArea codeArea;
-    static public String JAVA_DIRECTORY = "src/main/java/";
-    static private String PROGRAMM_DIRECTORY = JAVA_DIRECTORY + "programms/";
 
 
     public ProgrammController(CodeArea codeArea) {
@@ -45,7 +45,7 @@ public class ProgrammController {
 
     public static boolean makeProgrammFile(String fileName, CodeArea codeArea) {
         String prefix =
-                "package compiled;\n" +
+//                "package compiled;\n" +
                         "import model.Territory;\n" +
                         "public class " + fileName + " extends Territory{\n" +
                         "\tpublic void main(){\n" +
@@ -76,7 +76,33 @@ public class ProgrammController {
         return false;
     }
 
+    public static Territory compileTerritoryFile(File file){
+        JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
+        ByteArrayOutputStream err = new ByteArrayOutputStream();
+        boolean success =
+                javac.run(null, null, err, file.getAbsolutePath()) == 0;
+        if (!success) {
+            System.out.println(err.toString());
+        } else {
+            try{
 
+                URL[] urls = new URL[]{new File(PROGRAMM_DIRECTORY).toURI().toURL()};
+
+                URLClassLoader loader = new URLClassLoader(urls);
+                Class<?> territoryClass = loader.loadClass(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf('\\')+1,file.getAbsolutePath().indexOf('.')));
+                return (Territory) territoryClass.newInstance();
+
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * depracated.
+     * @param file
+     */
     public static void loadProgrammFromFile(File file) {
         /**
          * so war es bisher
@@ -89,71 +115,29 @@ public class ProgrammController {
 
         String fileName = file.getName().substring(0, file.getName().indexOf('.'));
         Stage appStage = RegistrationController.getStageForApp(fileName);
-        File compiledFile;
 
         if (appStage == null) {
             try {
-                File pathToProgramms = new File(PROGRAMM_DIRECTORY);
-                //File defaultTerritoryFile = new File(PROGRAMM_DIRECTORY + fileName + ".java");
-
-                JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
-                ByteArrayOutputStream err = new ByteArrayOutputStream();
-                boolean success =
-                        javac.run(null, null, err, file.getAbsolutePath()) == 0;
-                if (!success) {
-                    System.out.println(err.toString());
-                } else {
-                    File compiledClass = new File(JAVA_DIRECTORY + "compiled/" + fileName + ".class");
-                    compiledFile = new File(JAVA_DIRECTORY + "compiled/" + fileName + ".java");
-                    checkAndClear(compiledClass);
-                    checkAndClear(compiledFile);
-                    Path copyClass = Files.copy(
-                            Paths.get(PROGRAMM_DIRECTORY + fileName + ".class"),
-                            Paths.get(JAVA_DIRECTORY + "compiled/" + fileName + ".class")
-                    );
-                    Path copyFile = Files.copy(
-                            Paths.get(PROGRAMM_DIRECTORY + fileName + ".java"),
-                            Paths.get(JAVA_DIRECTORY + "compiled/" + fileName + ".java")
-                    );
-                    if (copyClass != null && copyFile != null) {
-                        System.out.println("Files moved successfully!");
-                    } else {
-                        System.out.println("File not removed :(");
-                    }
-
-                    System.out.println("ok");
-                }
-                /**File compiledFile = new File(JAVA_DIRECTORY + "compiled/"+ fileName +".java");
-                 Instant start = Instant.now();
-                 Duration between = Duration.between(start, Instant.now());
-                 while(between.getSeconds()<20){
-                 between = Duration.between(start, Instant.now());
-                 System.out.println("Warte auf CompiledFile! seit "+between.getSeconds()+" Sekunden.");
-                 }*/
-
-                URL[] urls = new URL[]{pathToProgramms.toURI().toURL()};
-                URLClassLoader loader = new URLClassLoader(urls);
-                Class<?> territoryClass = loader.loadClass("compiled."+fileName);
-                Territory territory = (Territory) territoryClass.newInstance();
-
-                CodeArea codeArea = new CodeArea();
-
-                compiledFile = new File(JAVA_DIRECTORY + "compiled/" + fileName + ".java");
-
-
-                String content = new String(Files.readAllBytes(Paths.get(compiledFile.toURI())));
-                System.out.println(content);
-                content = content.substring(content.indexOf('{') + 1, content.lastIndexOf('}'));
-                System.out.println(content + "Lel");
-                codeArea.setText(content);
-
-                new WindowController().prepareStage(new Stage(), territory, fileName, content, compiledFile);
+                //compileTerritoryFile(file);
+                new WindowController().prepareStage(new Stage(), new DefaultTerritory(), fileName, file);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             appStage.toFront();
         }
+    }
+
+    public static String getCodeAreaContentFrom(File file) {
+        try{
+            String content = new String(Files.readAllBytes(Paths.get(file.toURI())));
+            content = content.substring(content.indexOf('{') + 1, content.lastIndexOf('}'));
+            System.out.println(content);
+            return content;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return "Konnte Content nicht lesen!";
     }
 
     public static void saveProgrammCodeToFile(String content, File file) {
@@ -184,24 +168,5 @@ public class ProgrammController {
 
     public static void loadDefaultTerritory() {
         loadProgrammFromFile(new File("DefaultTerritory.java"));
-    }
-
-    /**
-     * helper method to clear out existing compiledStuff
-     *
-     * @param file
-     */
-    private static void checkAndClear(File file) {
-        if (file.exists()) {
-            System.out.print("Klasse gibts schon");
-            if (file.delete()) {
-                System.out.println(", wurde aber jetzt gelöscht :)");
-            } else {
-                System.out.println(" und konnte nicht gelöscht werden O_o");
-            }
-        } else {
-            System.out.println("Kompilierte klasse noch nicht vorhanden :)");
-            System.out.println(file.getAbsolutePath());
-        }
     }
 }
