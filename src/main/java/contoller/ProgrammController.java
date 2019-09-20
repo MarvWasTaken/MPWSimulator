@@ -1,5 +1,6 @@
 package contoller;
 
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import model.DefaultTerritory;
 import model.Territory;
@@ -45,16 +46,13 @@ public class ProgrammController {
 
     public static boolean makeProgrammFile(String fileName, CodeArea codeArea) {
         String prefix =
-                        "import model.Territory;\n" +
-                        "public class " + fileName + " extends Territory{\n" +
-                        "\tpublic void main(){\n" +
-                        "\t}";
-        String suffix = "\n}";
+                        "import model.Territory; public class " + fileName + " extends Territory{ public void main(){} ";
+        String suffix = "}";
 
 
         System.out.println(fileName);
-        System.out.println(PROGRAMM_DIRECTORY + "\\"+ fileName);
-        File file = new File(PROGRAMM_DIRECTORY +"\\"+ fileName + ".java");
+        System.out.println(PROGRAMM_DIRECTORY + "/"+ fileName);
+        File file = new File(PROGRAMM_DIRECTORY +"/"+ fileName + ".java");
         if (!file.exists()) {
             try {
                 boolean success = file.createNewFile();
@@ -82,13 +80,17 @@ public class ProgrammController {
         boolean success =
                 javac.run(null, null, err, file.getAbsolutePath()) == 0;
         if (!success) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Kompilierfehler");
+            alert.setHeaderText("Fehler beim kompilieren von "+file.getName());
+            alert.setContentText(err.toString());
+            alert.show();
             System.out.println(err.toString());
         } else {
             System.out.println(classNameOfFile+" Compiled successfully!");
             try{
 
                 URL[] urls = new URL[]{new File(PROGRAMM_DIRECTORY).toURI().toURL()};
-
                 URLClassLoader loader = new URLClassLoader(urls);
                 Class<?> territoryClass = loader.loadClass(classNameOfFile);
                 return (Territory) territoryClass.newInstance();
@@ -101,7 +103,7 @@ public class ProgrammController {
     }
 
     public static String getClassNameOfFile(File file) {
-        return file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf('\\')+1,file.getAbsolutePath().indexOf('.'));
+        return file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf('/')+1,file.getAbsolutePath().indexOf('.'));
     }
 
     /**
@@ -147,9 +149,8 @@ public class ProgrammController {
 
     public static void saveProgrammCodeToFile(String content, File file) {
         String prefix =
-                        "import model.Territory;\n" +
-                        "public class " + file.getName().substring(0, file.getName().indexOf('.')) + " extends Territory{\n";
-        String suffix = "\n}";
+                        "import model.Territory; public class " + file.getName().substring(0, file.getName().indexOf('.')) + " extends Territory{";
+        String suffix = "}";
 
         System.out.println("###########");
         System.out.println(prefix);

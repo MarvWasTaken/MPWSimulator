@@ -25,7 +25,6 @@ public class Territory {
         }
         actor = addActor(0,0);
         actor.setTerritory(this);
-
     }
 
     public Territory(int height, int width){

@@ -78,7 +78,7 @@ public class WindowController {
 
         result.ifPresent(fileName -> {
             boolean success = ProgrammController.makeProgrammFile(fileName, codeArea);
-            if (success) {
+            /**if (success) {
                 new WindowController()
                         .prepareStage(
                                 new Stage(),
@@ -89,7 +89,7 @@ public class WindowController {
                 alert.setTitle("WARNUNG");
                 alert.setHeaderText(fileName + ".java ist bereits vorhanden!");
                 alert.show();
-            }
+            }**/
 
         });
     }
@@ -274,6 +274,7 @@ public class WindowController {
     }
 
     public void compileFile(){
+        ProgrammController.saveProgrammCodeToFile(this.codeArea.getText(), this.file);
         ProgrammController.compileTerritoryFile(this.file);
     }
 
