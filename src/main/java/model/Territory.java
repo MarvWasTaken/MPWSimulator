@@ -129,8 +129,20 @@ public class Territory extends Observable {
         this.setChanged();
         this.notifyObservers();
     }
-    public boolean vornFrei() throws OutOfFieldException {
+    public boolean vornFrei() {
         return this.actor.vornFrei(this);
+    }
+
+    public void gib(){
+        this.actor.gib();
+    }
+
+    public void nimm(){
+        this.actor.nimm();
+    }
+
+    public boolean kornDa(){
+        return this.actor.kornDa();
     }
 
     public int[][] getTiles() {

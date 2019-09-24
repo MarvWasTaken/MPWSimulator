@@ -77,6 +77,10 @@ public class Actor extends Observable {
         }
     }
 
+    public boolean kornDa(){
+        return this.territory.getTiles()[yPos][xPos]>0;
+    }
+
     public void move() {
         try{
             if (vornFrei(this.territory)) {
@@ -96,7 +100,7 @@ public class Actor extends Observable {
                 }
             }
         } catch (OutOfFieldException ofe){
-            ofe.printStackTrace();
+            throw new OutOfFieldException();
         }
     }
 
@@ -106,13 +110,13 @@ public class Actor extends Observable {
             this.territory.getTiles()[this.yPos][this.xPos]--;
             System.out.println("es sind noch "+this.territory.getTiles()[this.yPos][this.xPos]+" Körner auf dem Feld.");
         } else {
-            new TileEmptyException().printStackTrace();
+            throw new TileEmptyException();
         }
     }
 
     public void gib() {
         if (this.getNumberOfCollectibles() <= 0) {
-            new ActorOutOfCollectiblesException().printStackTrace();
+            throw new ActorOutOfCollectiblesException();
         } else if (this.territory.getTiles()[this.yPos][this.xPos] < 12) {
             this.territory.getTiles()[this.yPos][this.xPos]++;
             this.numberOfCollectibles--;
