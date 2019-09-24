@@ -202,11 +202,14 @@ public class CustomMenuBar extends MenuBar {
         playMenuItem = new MenuItem("Start/Fortsetzen");
         quickItemAcc(playMenuItem, "SHORTCUT+F11");
         quickItemIcon(playMenuItem, "play16.gif");
+        playMenuItem.setDisable(false);
         pauseMenuItem = new MenuItem("Pause");
         quickItemIcon(pauseMenuItem, "pause16.gif");
+        playMenuItem.setDisable(true);
         stopMenuItem = new MenuItem("Stopp");
         quickItemAcc(stopMenuItem, "SHORTCUT+F12");
         quickItemIcon(stopMenuItem, "stop16.gif");
+        stopMenuItem.setDisable(true);
         simulationMenu.getItems().addAll(playMenuItem, pauseMenuItem, stopMenuItem);
         //Ende Simulationsmenü
 

@@ -1,8 +1,6 @@
 package contoller;
 
-import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -33,6 +31,18 @@ public class WindowController {
     private File file;
 
     private CodeArea codeArea;
+
+    private CustomMenuBar customMenuBar;
+
+    private CustomToolBar customToolBar;
+
+
+
+    private TerritoryPanel territoryPanel;
+
+    private SimulationController simulationController;
+
+
 
     public WindowController() {
         codeArea = new CodeArea();
@@ -79,17 +89,17 @@ public class WindowController {
         result.ifPresent(fileName -> {
             boolean success = ProgrammController.makeProgrammFile(fileName, codeArea);
             /**if (success) {
-                new WindowController()
-                        .prepareStage(
-                                new Stage(),
-                                new Territory(10, 10, 5, 5),
-                                fileName);
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("WARNUNG");
-                alert.setHeaderText(fileName + ".java ist bereits vorhanden!");
-                alert.show();
-            }**/
+             new WindowController()
+             .prepareStage(
+             new Stage(),
+             new Territory(10, 10, 5, 5),
+             fileName);
+             } else {
+             Alert alert = new Alert(Alert.AlertType.WARNING);
+             alert.setTitle("WARNUNG");
+             alert.setHeaderText(fileName + ".java ist bereits vorhanden!");
+             alert.show();
+             }**/
 
         });
     }
@@ -107,24 +117,28 @@ public class WindowController {
         SplitPane splitPane = new SplitPane();
 
         ScrollPane scrollPane = new ScrollPane();
-        TerritoryPanel territoryPanel = new TerritoryPanel(territory, scrollPane);
+        territoryPanel = new TerritoryPanel(territory, scrollPane);
+
+//        this.simulationController.setWindowController(this);
+
 
         scrollPane.setContent(territoryPanel);
 
         //Filling root with the MenuBar and the subroot.
-        CustomMenuBar customMenuBar = this.buildMenuBar(territoryPanel, this);
+        customMenuBar = this.buildMenuBar(territoryPanel, this);
         root.setTop(customMenuBar);
         root.setCenter(subRootPane);
         //Filling the subroot with the toolbar and the splitpane
-        CustomToolBar customToolBar = this.buildToolbar(customMenuBar, this);
+        customToolBar = this.buildToolbar(customMenuBar, this);
         customMenuBar.setCustomToolBar(customToolBar);
         subRootPane.setTop(customToolBar);
         subRootPane.setCenter(splitPane);
         Label statusLabel = new Label("Hallo Dibo");
         subRootPane.setBottom(statusLabel);
+        simulationController = new SimulationController(this);
 
         splitPane.getItems().addAll(codeArea, scrollPane);
-        Scene scene = new Scene(root, 950, 650);
+        Scene scene = new Scene(root, 1000, 650);
 
         territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEvent -> {
             int x = (int) (Math.floor(mouseEvent.getX() / TerritoryPanel.CELLSIZE));
@@ -214,17 +228,46 @@ public class WindowController {
             System.out.println(e.getCode().toString());
         });
 
+        /**
+         * Events for the File Creating/Saving Stuff
+         */
         customToolBar.getOpenFileBtn().setOnMouseReleased(event -> loadProgramm());
-
         customToolBar.getSaveFileBtn().setOnMouseReleased(event -> saveProgrammCodeToFile(codeArea.getText()));
-
         customToolBar.getCompileFileBtn().setOnMouseReleased(event -> compileFile());
+        customMenuBar.getOpenFileMenuItem().setOnAction(event -> loadProgramm());
+        customMenuBar.getSaveSubMenu().setOnAction(event -> saveProgrammCodeToFile(codeArea.getText()));
+        customMenuBar.getCompileMenuItem().setOnAction(event -> compileFile());
+
+        /**
+         * Events for Simulation Start/Stop
+         */
+        customToolBar.getPlayBtn().setOnMouseReleased(event -> {
+            this.simulationController.play();
+            simulationToggled(customToolBar, customMenuBar, false, true, true);
+        });
+        customToolBar.getPauseBtn().setOnMouseReleased(event -> {
+            this.simulationController.pause();
+            simulationToggled(customToolBar, customMenuBar, true, false, true);
+        });
+        customToolBar.getStopBtn().setOnMouseReleased(event -> {
+            this.simulationController.stop();
+            simulationToggled(customToolBar, customMenuBar, true, false, false);
+        });
 
         return scene;
     }
 
-    public void saveProgrammCodeToFile(String content){
-        if(this.file != null){
+    public void simulationToggled(CustomToolBar customToolBar, CustomMenuBar customMenuBar, boolean runnable, boolean pauseable, boolean stoppable){
+        customToolBar.getPlayBtn().setDisable(!runnable);
+        customToolBar.getPauseBtn().setDisable(!pauseable);
+        customToolBar.getStopBtn().setDisable(!stoppable);
+        customMenuBar.getPlayMenuItem().setDisable(!runnable);
+        customMenuBar.getPauseMenuItem().setDisable(!pauseable);
+        customMenuBar.getStopMenuItem().setDisable(!stoppable);
+    }
+
+    public void saveProgrammCodeToFile(String content) {
+        if (this.file != null) {
             ProgrammController.saveProgrammCodeToFile(content, this.file);
         }
     }
@@ -245,7 +288,7 @@ public class WindowController {
         Scene scene = this.buildScene(territory, ProgrammController.getCodeAreaContentFrom(file));
         stage.setScene(scene);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("../main/resources/Hamster24.png")));
-        stage.setMinWidth(950);
+        stage.setMinWidth(1000);
         stage.setMinHeight(650);
         stage.show();
         RegistrationController.APPS_RUNNING.add(stage);
@@ -253,6 +296,7 @@ public class WindowController {
             System.out.println("Schließt jetzt!");
             saveProgrammCodeToFile(codeArea.getText());
             RegistrationController.APPS_RUNNING.remove(RegistrationController.getStageForApp(fileName));
+            simulationController.killAllThreads();
         });
     }
 
@@ -262,7 +306,7 @@ public class WindowController {
         Scene scene = this.buildScene(territory);
         stage.setScene(scene);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("../main/resources/Hamster24.png")));
-        stage.setMinWidth(950);
+        stage.setMinWidth(1000);
         stage.setMinHeight(650);
         stage.show();
         RegistrationController.APPS_RUNNING.add(stage);
@@ -270,12 +314,14 @@ public class WindowController {
             System.out.println("Schließt jetzt!");
             saveProgrammCodeToFile(codeArea.getText());
             RegistrationController.APPS_RUNNING.remove(RegistrationController.getStageForApp(fileName));
+            simulationController.killAllThreads();
         });
     }
 
-    public void compileFile(){
+    public void compileFile() {
         ProgrammController.saveProgrammCodeToFile(this.codeArea.getText(), this.file);
-        ProgrammController.compileTerritoryFile(this.file);
+        Territory compiledTerritory = ProgrammController.compileTerritoryFile(this.file);
+        this.getTerritoryPanel().setTerritory(compiledTerritory);
     }
 
     public void loadProgramm() {
@@ -297,5 +343,37 @@ public class WindowController {
 
     public void setCodeArea(CodeArea codeArea) {
         this.codeArea = codeArea;
+    }
+
+    public SimulationController getSimulationController() {
+        return simulationController;
+    }
+
+    public void setSimulationController(SimulationController simulationController) {
+        this.simulationController = simulationController;
+    }
+
+    public CustomMenuBar getCustomMenuBar() {
+        return customMenuBar;
+    }
+
+    public void setCustomMenuBar(CustomMenuBar customMenuBar) {
+        this.customMenuBar = customMenuBar;
+    }
+
+    public CustomToolBar getCustomToolBar() {
+        return customToolBar;
+    }
+
+    public void setCustomToolBar(CustomToolBar customToolBar) {
+        this.customToolBar = customToolBar;
+    }
+
+    public TerritoryPanel getTerritoryPanel() {
+        return territoryPanel;
+    }
+
+    public void setTerritoryPanel(TerritoryPanel territoryPanel) {
+        this.territoryPanel = territoryPanel;
     }
 }

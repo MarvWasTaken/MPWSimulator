@@ -11,9 +11,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.awt.event.MouseEvent;
-
-public class CustomToolBar extends ToolBar{
+public class CustomToolBar extends ToolBar {
 
 
     private ToolBar toolBar;
@@ -29,8 +27,10 @@ public class CustomToolBar extends ToolBar{
     private int hamsterDirection;
     private ToggleButton playBtn;
     private ToggleButton pauseBtn;
-
     private ToggleButton stopBtn;
+
+
+    private Slider speedSlider;
 
     private ToggleGroup playPauseBtnTg;
 
@@ -38,8 +38,8 @@ public class CustomToolBar extends ToolBar{
 
     private WindowController windowController;
 
-    public CustomToolBar(CustomMenuBar customMenuBar, WindowController windowController){
-        this. windowController = windowController;
+    public CustomToolBar(CustomMenuBar customMenuBar, WindowController windowController) {
+        this.windowController = windowController;
         this.territoryPanel = customMenuBar.getTerritoryPanel();
         createNewFileBtn = new Button();
         quickButtonIcon(createNewFileBtn, "new24.gif");
@@ -140,8 +140,16 @@ public class CustomToolBar extends ToolBar{
         playBtn.setTooltip(new Tooltip("Start/Fortsetzen"));
         pauseBtn.setTooltip(new Tooltip("Pause"));
         stopBtn.setTooltip(new Tooltip("Stopp"));
+        playBtn.setDisable(false);
+        pauseBtn.setDisable(true);
+        stopBtn.setDisable(true);
+        speedSlider = new Slider();
         playPauseBtnTg = new ToggleGroup();
         playPauseBtnTg.getToggles().addAll(playBtn, pauseBtn, stopBtn);
+
+        speedSlider.setOnMouseReleased(event -> {
+            System.out.println(speedSlider.getValue());
+        });
 
         this.getItems().addAll(
                 createNewFileBtn,
@@ -166,10 +174,11 @@ public class CustomToolBar extends ToolBar{
                 pauseBtn,
                 stopBtn,
                 new Separator(),
-                new Slider()
+                speedSlider
         );
 
     }
+
     /**
      * helper method to make assigning images to Buttons easier
      *
@@ -179,7 +188,7 @@ public class CustomToolBar extends ToolBar{
     private void quickButtonIcon(Button button, String fileName) {
         Image iconImage;
         try {
-            iconImage = new Image(getClass().getResource("../main/resources/"+fileName).toString());
+            iconImage = new Image(getClass().getResource("../main/resources/" + fileName).toString());
         } catch (NullPointerException e) {
             System.out.println("Bild bei " + fileName + " nicht gefunden!");
             return;
@@ -200,7 +209,7 @@ public class CustomToolBar extends ToolBar{
     private void quickToggleButtonIcon(ToggleButton toggleButton, String fileName) {
         Image iconImage;
         try {
-            iconImage = new Image(getClass().getResource("../main/resources/"+fileName).toString());
+            iconImage = new Image(getClass().getResource("../main/resources/" + fileName).toString());
         } catch (NullPointerException e) {
             System.out.println("Bild bei " + fileName + " nicht gefunden!");
             return;
@@ -338,5 +347,13 @@ public class CustomToolBar extends ToolBar{
 
     public void setTerritoryPanel(TerritoryPanel territoryPanel) {
         this.territoryPanel = territoryPanel;
+    }
+
+    public Slider getSpeedSlider() {
+        return speedSlider;
+    }
+
+    public void setSpeedSlider(Slider speedSlider) {
+        this.speedSlider = speedSlider;
     }
 }

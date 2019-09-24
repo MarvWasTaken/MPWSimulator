@@ -2,8 +2,11 @@ package model;
 
 import exceptions.CollectibleCountMayNotBeNegativeException;
 import exceptions.ObstacleNotPossibleException;
+import exceptions.OutOfFieldException;
 
-public class Territory {
+import java.util.Observable;
+
+public class Territory extends Observable {
 
     public final int OBSTACLE = -1;
     private Actor actor;
@@ -113,11 +116,33 @@ public class Territory {
         this.actor = hamster;
     }
 
+    /**
+     * Hamstermethoden
+     */
+    public void vor(){
+        this.actor.move();
+        this.setChanged();
+        this.notifyObservers();
+    }
+    public void linksUm(){
+        this.actor.linksUm();
+        this.setChanged();
+        this.notifyObservers();
+    }
+    public boolean vornFrei() throws OutOfFieldException {
+        return this.actor.vornFrei(this);
+    }
+
     public int[][] getTiles() {
         return tiles;
     }
 
     public void setTiles(int[][] tiles) {
         this.tiles = tiles;
+    }
+
+    public void main() {
+        this.getActor().main();
+        System.out.println("Ich bin die herkömmliche Main!");
     }
 }
