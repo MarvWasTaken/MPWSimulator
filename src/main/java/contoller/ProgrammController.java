@@ -103,6 +103,9 @@ public class ProgrammController {
     }
 
     public static String getClassNameOfFile(File file) {
+        //Use this on windows
+        //return file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf('\\')+1,file.getAbsolutePath().indexOf('.'));
+        //Use this on Mac
         return file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf('/')+1,file.getAbsolutePath().indexOf('.'));
     }
 
