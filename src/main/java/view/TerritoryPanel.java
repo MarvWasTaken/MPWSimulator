@@ -1,18 +1,14 @@
 package view;
 
-import contoller.ProgrammController;
-import contoller.WindowController;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import model.Territory;
 
 import java.util.Optional;
@@ -58,7 +54,7 @@ public class TerritoryPanel extends Region {
 
         canvas.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.UP) {
-                this.territory.getActor().move();
+                this.territory.getActor().vor();
                 draw();
             }
             System.out.println(e.getCode().toString());
@@ -132,7 +128,7 @@ public class TerritoryPanel extends Region {
     }
 
     public void moveEventTriggered() {
-        this.territory.getActor().move();
+        this.territory.getActor().vor();
         draw();
     }
 

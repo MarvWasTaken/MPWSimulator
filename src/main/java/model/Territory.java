@@ -2,7 +2,6 @@ package model;
 
 import exceptions.CollectibleCountMayNotBeNegativeException;
 import exceptions.ObstacleNotPossibleException;
-import exceptions.OutOfFieldException;
 
 import java.util.Observable;
 
@@ -120,7 +119,7 @@ public class Territory extends Observable {
      * Hamstermethoden
      */
     public void vor(){
-        this.actor.move();
+        this.actor.vor();
         this.setChanged();
         this.notifyObservers();
     }

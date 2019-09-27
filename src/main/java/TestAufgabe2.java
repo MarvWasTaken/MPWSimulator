@@ -21,7 +21,7 @@ public class TestAufgabe2 {
                         t.getActor().linksUm();
                         break;
                     case 'm':
-                        t.getActor().move();
+                        t.getActor().vor();
                         break;
                     case 'g':
                         t.getActor().gib();

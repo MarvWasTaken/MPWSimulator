@@ -9,7 +9,6 @@ public class SimulationController {
     public static final int STOPPED = 2;
     SimulationsThread thread;
 
-
     WindowController windowController;
     int speed;
 
@@ -51,4 +50,8 @@ public class SimulationController {
     public WindowController getWindowController() {
         return windowController;
     }
+
+    public boolean isRunning(){ return this.simulationState == RUNNING;}
+    public boolean isStopped(){ return this.simulationState == STOPPED;}
+    public boolean isPaused(){return this.simulationState == PAUSED;}
 }

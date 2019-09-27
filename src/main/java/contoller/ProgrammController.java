@@ -89,7 +89,9 @@ public class ProgrammController {
         } else {
             System.out.println(classNameOfFile+" Compiled successfully!");
             try{
-
+                /**
+                 * Wie in der Vorlesung gezeigte Nutzung des Classloaders.
+                 */
                 URL[] urls = new URL[]{new File(PROGRAMM_DIRECTORY).toURI().toURL()};
                 URLClassLoader loader = new URLClassLoader(urls);
                 Class<?> territoryClass = loader.loadClass(classNameOfFile);
@@ -103,16 +105,14 @@ public class ProgrammController {
     }
 
     public static String getClassNameOfFile(File file) {
-        //Use this on windows
-        //return file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf('\\')+1,file.getAbsolutePath().indexOf('.'));
-        //Use this on Mac
-        return file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf('/')+1,file.getAbsolutePath().indexOf('.'));
+
+        //Setting current OS fileseparator char
+        String ret = System.getProperty("file.separator");
+        System.out.println(ret);
+        return file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(ret)+1,file.getAbsolutePath().indexOf('.'));
+
     }
 
-    /**
-     * depracated.
-     * @param file
-     */
     public static void loadProgrammFromFile(File file) {
         /**
          * so war es bisher

@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import model.Actor;
 import model.Territory;
 import util.MyAppConstants;
+import view.ActorContextMenu;
 import view.CodeArea;
 import view.CustomMenuBar;
 import view.CustomToolBar;
@@ -140,14 +141,18 @@ public class WindowController {
         splitPane.getItems().addAll(codeArea, scrollPane);
         Scene scene = new Scene(root, 1000, 650);
 
+
         territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEvent -> {
             int x = (int) (Math.floor(mouseEvent.getX() / TerritoryPanel.CELLSIZE));
             int y = (int) (Math.floor(mouseEvent.getY() / TerritoryPanel.CELLSIZE));
             if (x == territoryPanel.getTerritory().getActor().getxPos() && y == territoryPanel.getTerritory().getActor().getyPos()) {
-                territoryPanel.setDraggingActor(true);
-                System.out.println("Hamster wird gezogen!");
-            } else {
-
+                if(mouseEvent.isPrimaryButtonDown()) {
+                    territoryPanel.setDraggingActor(true);
+                    System.out.println("Hamster wird gezogen!");
+                } else if (mouseEvent.isSecondaryButtonDown()) {
+                    ActorContextMenu a = new ActorContextMenu(this.getTerritoryPanel().getTerritory().getActor().getClass(), territoryPanel);
+                    a.show(territoryPanel.getCanvas(), mouseEvent.getScreenX(), mouseEvent.getScreenY());
+                }
             }
         });
 
@@ -202,7 +207,7 @@ public class WindowController {
             System.out.println(keyEvent.getCode().toString());
             switch (keyEvent.getCode()) {
                 case UP:
-                    a.move();
+                    a.vor();
                     break;
                 case LEFT:
                     a.linksUm();
@@ -221,7 +226,7 @@ public class WindowController {
 
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.UP) {
-                territoryPanel.getTerritory().getActor().move();
+                territoryPanel.getTerritory().getActor().vor();
                 territoryPanel.draw();
                 System.out.println("gemacht!");
             }
@@ -322,6 +327,7 @@ public class WindowController {
         ProgrammController.saveProgrammCodeToFile(this.codeArea.getText(), this.file);
         Territory compiledTerritory = ProgrammController.compileTerritoryFile(this.file);
         this.getTerritoryPanel().setTerritory(compiledTerritory);
+        this.getTerritoryPanel().draw();
     }
 
     public void loadProgramm() {

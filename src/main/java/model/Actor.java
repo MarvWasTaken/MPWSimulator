@@ -1,5 +1,6 @@
 package model;
 
+import annotations.Invisible;
 import exceptions.ActorOutOfCollectiblesException;
 import exceptions.OutOfFieldException;
 import exceptions.TileEmptyException;
@@ -16,10 +17,12 @@ public class Actor extends Observable {
     private int yPos;
     private int xPos;
 
+    @Invisible
     public int getDirection() {
         return direction;
     }
 
+    @Invisible
     public void setDirection(int direction) {
         this.direction = direction;
     }
@@ -81,7 +84,7 @@ public class Actor extends Observable {
         return this.territory.getTiles()[yPos][xPos]>0;
     }
 
-    public void move() {
+    public void vor() {
         try{
             if (vornFrei(this.territory)) {
                 switch (this.direction) {
@@ -124,43 +127,52 @@ public class Actor extends Observable {
         }
     }
 
+    @Invisible
     public void printPos() {
         System.out.println("Y:" + yPos + " X:" + xPos);
     }
 
+    @Invisible
     public int getxPos() {
         return xPos;
     }
 
+    @Invisible
     public void setxPos(int xPos) {
         this.xPos = xPos;
     }
 
+    @Invisible
     public int getyPos() {
         return yPos;
     }
 
+    @Invisible
     public void setyPos(int yPos) {
         this.yPos = yPos;
     }
 
-
+    @Invisible
     public Territory getTerritory() {
         return territory;
     }
 
+    @Invisible
     public void setTerritory(Territory territory) {
         this.territory = territory;
     }
 
+    @Invisible
     public int getNumberOfCollectibles() {
         return numberOfCollectibles;
     }
 
+    @Invisible
     public void setNumberOfCollectibles(int numberOfCollectibles) {
         this.numberOfCollectibles = numberOfCollectibles;
     }
 
+    @Invisible
     public String getDirectedSymbol() {
         switch (this.direction) {
             case NORTH:
