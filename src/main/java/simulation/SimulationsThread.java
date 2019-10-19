@@ -16,7 +16,6 @@ public class SimulationsThread extends Thread {
 
     public void run() {
         territoryPanel.getTerritory().addObserver((o, arg) -> {
-            System.out.println("Hat glaube ich geklappt :)");
             territoryPanel.draw();
             try {
                 this.sleep((int) (1000 - Math.floor(1000 * (parent.getWindowController().getCustomToolBar().getSpeedSlider().getValue() / 100))));

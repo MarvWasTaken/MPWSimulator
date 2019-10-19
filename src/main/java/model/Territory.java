@@ -1,5 +1,6 @@
 package model;
 
+import annotations.Invisible;
 import exceptions.CollectibleCountMayNotBeNegativeException;
 import exceptions.ObstacleNotPossibleException;
 
@@ -11,6 +12,7 @@ public class Territory extends Observable {
     private Actor actor;
     private int [][] tiles;
 
+    @Invisible
     public void setCollectiblesCount(int yPos, int xPos, int count) throws CollectibleCountMayNotBeNegativeException {
         if(count < 0){
             throw new CollectibleCountMayNotBeNegativeException();
@@ -53,11 +55,13 @@ public class Territory extends Observable {
 
     }
 
+    @Invisible
     public Actor addActor(int yPos, int xPos){
         this.actor = new Actor(yPos, xPos);
         return actor;
     }
 
+    @Invisible
     public void addObstacle(int yPos, int xPos) {
         if(yPos == this.actor.getyPos() && xPos == this.actor.getxPos()){
             new ObstacleNotPossibleException().printStackTrace();
@@ -66,6 +70,7 @@ public class Territory extends Observable {
         }
     }
 
+    @Invisible
     public void addCorn(int yPos, int xPos) {
         if(this.tiles[yPos][xPos] != -1 && this.tiles[yPos][xPos] < 12){
             this.tiles[yPos][xPos]++;
@@ -74,6 +79,7 @@ public class Territory extends Observable {
         }
     }
 
+    @Invisible
     public void resize(int x, int y) {
         int newTiles[][] = new int[y][x];
         for (int i = 0; i < this.tiles.length; i++) {
@@ -90,6 +96,7 @@ public class Territory extends Observable {
         this.tiles = newTiles;
     }
 
+    @Invisible
     public void print(){
         //iteration über die zeilen
         for(int i = 0; i < tiles.length; i++){
@@ -107,10 +114,12 @@ public class Territory extends Observable {
         }
     }
 
+    @Invisible
     public Actor getActor() {
         return actor;
     }
 
+    @Invisible
     public void setActor(Actor hamster) {
         this.actor = hamster;
     }
@@ -144,10 +153,12 @@ public class Territory extends Observable {
         return this.actor.kornDa();
     }
 
+    @Invisible
     public int[][] getTiles() {
         return tiles;
     }
 
+    @Invisible
     public void setTiles(int[][] tiles) {
         this.tiles = tiles;
     }

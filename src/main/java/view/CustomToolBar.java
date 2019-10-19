@@ -1,19 +1,18 @@
 package view;
 
 import contoller.WindowController;
-import javafx.scene.control.Button;
-import javafx.scene.control.Separator;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.ToolBar;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class CustomToolBar extends ToolBar {
 
 
+    private Button hamsterMoveBtn;
+    private Button hamsterLeftBtn;
+    private Button hamsterCornBtn;
+    private Button hamsterPickBtn;
+    private Button hamsterPutBtn;
     private ToolBar toolBar;
     private Button createNewFileBtn;
     private Button openFileBtn;
@@ -112,11 +111,11 @@ public class CustomToolBar extends ToolBar {
         ToggleGroup btnTg = new ToggleGroup();
         btnTg.getToggles().addAll(hamsterBtn, cornBtn, wallBtn, deleteBtn);
 
-        Button hamsterCornBtn = new Button();
-        Button hamsterLeftBtn = new Button();
-        Button hamsterMoveBtn = new Button();
-        Button hamsterPickBtn = new Button();
-        Button hamsterPutBtn = new Button();
+        hamsterCornBtn = new Button();
+        hamsterLeftBtn = new Button();
+        hamsterMoveBtn = new Button();
+        hamsterPickBtn = new Button();
+        hamsterPutBtn = new Button();
         quickButtonIcon(hamsterCornBtn, "HamsterCorn24.png");
         quickButtonIcon(hamsterLeftBtn, "HamsterLeft24.png");
         quickButtonIcon(hamsterMoveBtn, "HamsterMove24.png");
@@ -356,4 +355,46 @@ public class CustomToolBar extends ToolBar {
     public void setSpeedSlider(Slider speedSlider) {
         this.speedSlider = speedSlider;
     }
+
+    public Button getHamsterMoveBtn() {
+        return hamsterMoveBtn;
+    }
+
+    public void setHamsterMoveBtn(Button hamsterMoveBtn) {
+        this.hamsterMoveBtn = hamsterMoveBtn;
+    }
+
+    public Button getHamsterLeftBtn() {
+        return hamsterLeftBtn;
+    }
+
+    public void setHamsterLeftBtn(Button hamsterLeftBtn) {
+        this.hamsterLeftBtn = hamsterLeftBtn;
+    }
+
+    public Button getHamsterCornBtn() {
+        return hamsterCornBtn;
+    }
+
+    public void setHamsterCornBtn(Button hamsterCornBtn) {
+        this.hamsterCornBtn = hamsterCornBtn;
+    }
+
+    public Button getHamsterPickBtn() {
+        return hamsterPickBtn;
+    }
+
+    public void setHamsterPickBtn(Button hamsterPickBtn) {
+        this.hamsterPickBtn = hamsterPickBtn;
+    }
+
+    public Button getHamsterPutBtn() {
+        return hamsterPutBtn;
+    }
+
+    public void setHamsterPutBtn(Button hamsterPutBtn) {
+        this.hamsterPutBtn = hamsterPutBtn;
+    }
+
+
 }

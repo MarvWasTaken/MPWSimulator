@@ -1,11 +1,7 @@
 package contoller;
 
 import javafx.scene.Scene;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -148,16 +144,15 @@ public class WindowController {
             if (x == territoryPanel.getTerritory().getActor().getxPos() && y == territoryPanel.getTerritory().getActor().getyPos()) {
                 if(mouseEvent.isPrimaryButtonDown()) {
                     territoryPanel.setDraggingActor(true);
-                    System.out.println("Hamster wird gezogen!");
                 } else if (mouseEvent.isSecondaryButtonDown()) {
-                    ActorContextMenu a = new ActorContextMenu(this.getTerritoryPanel().getTerritory().getActor().getClass(), territoryPanel);
+                    ActorContextMenu a = new ActorContextMenu(territoryPanel);
                     a.show(territoryPanel.getCanvas(), mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 }
             }
         });
 
         territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseEvent -> {
-            if (territoryPanel.isDraggingActor()) {
+            try{if (territoryPanel.isDraggingActor()) {
                 int x = (int) (Math.floor(mouseEvent.getX() / TerritoryPanel.CELLSIZE));
                 int y = (int) (Math.floor(mouseEvent.getY() / TerritoryPanel.CELLSIZE));
                 if (y < territoryPanel.getTerritory().getTiles().length
@@ -167,13 +162,14 @@ public class WindowController {
                     territoryPanel.getTerritory().getActor().setyPos(y);
                 }
                 territoryPanel.draw();
+            }}
+            catch (ArrayIndexOutOfBoundsException e){
+                //Prevent the log from being spammed in case the user tries to drag the hamster out of bounds.
             }
-            System.out.println("dragged!");
         });
 
         territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_RELEASED, mouseEvent -> {
             territoryPanel.setDraggingActor(false);
-            System.out.println("Hamster wird nicht mehr gezogen!");
         });
 
         territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
@@ -196,15 +192,13 @@ public class WindowController {
                     territoryPanel.getTerritory().getTiles()[y][x] = 0;
                     break;
                 default:
-                    System.out.println("Hat nicht geklappt du Lurch");
-
+                    break;
             }
             territoryPanel.draw();
         });
 
         scrollPane.addEventHandler(KeyEvent.KEY_RELEASED, keyEvent -> {
             Actor a = territoryPanel.getTerritory().getActor();
-            System.out.println(keyEvent.getCode().toString());
             switch (keyEvent.getCode()) {
                 case UP:
                     a.vor();
@@ -228,13 +222,11 @@ public class WindowController {
             if (e.getCode() == KeyCode.UP) {
                 territoryPanel.getTerritory().getActor().vor();
                 territoryPanel.draw();
-                System.out.println("gemacht!");
             }
-            System.out.println(e.getCode().toString());
         });
 
         /**
-         * Events for the File Creating/Saving Stuff
+         * Events for the File Creating/Loading/Saving/Compiling
          */
         customToolBar.getOpenFileBtn().setOnMouseReleased(event -> loadProgramm());
         customToolBar.getSaveFileBtn().setOnMouseReleased(event -> saveProgrammCodeToFile(codeArea.getText()));
@@ -257,6 +249,52 @@ public class WindowController {
         customToolBar.getStopBtn().setOnMouseReleased(event -> {
             this.simulationController.stop();
             simulationToggled(customToolBar, customMenuBar, true, false, false);
+        });
+        customMenuBar.getPlayMenuItem().setOnAction(event -> {
+            this.simulationController.play();
+            simulationToggled(customToolBar, customMenuBar, false, true, true);
+        });
+        customMenuBar.getPauseMenuItem().setOnAction(event -> {
+            this.simulationController.pause();
+            simulationToggled(customToolBar, customMenuBar, true, false, true);
+        });
+        customMenuBar.getStopMenuItem().setOnAction(event -> {
+            this.simulationController.stop();
+            simulationToggled(customToolBar, customMenuBar, true, false, false);
+        });
+
+        /**
+         * Events for the Actor MenuItems and Buttons
+         */
+        customToolBar.getHamsterCornBtn().setOnMouseReleased(event -> {
+            customToolBar.getTerritoryPanel().getTerritory().getActor().setNumberOfCollectibles(9);
+        });
+        customToolBar.getHamsterPickBtn().setOnMouseReleased(event -> {
+            customToolBar.getTerritoryPanel().getTerritory().nimm();
+            territoryPanel.draw();
+        });
+        customToolBar.getHamsterPutBtn().setOnMouseReleased(event -> {
+            customToolBar.getTerritoryPanel().getTerritory().gib();
+            territoryPanel.draw();
+        });
+        customMenuBar.getTurnLeftMenuItem().setOnAction(event -> {
+            customToolBar.getTerritoryPanel().getTerritory().linksUm();
+            territoryPanel.draw();
+        });
+        customMenuBar.getMoveMenuItem().setOnAction(event -> {
+            customToolBar.getTerritoryPanel().getTerritory().vor();
+            territoryPanel.draw();
+        });
+        customMenuBar.getHasCornMenuItem().setOnAction(event -> {
+            customToolBar.getTerritoryPanel().getTerritory().getActor().setNumberOfCollectibles(9);
+        });
+        customMenuBar.getGiveCornMenuItem().setOnAction(event -> {
+            customToolBar.getTerritoryPanel().getTerritory().gib();
+            territoryPanel.draw();
+        });
+        customMenuBar.getTakeCornMenuItem().setOnAction(event -> {
+            customToolBar.getTerritoryPanel().getTerritory().nimm();
+            territoryPanel.draw();
         });
 
         return scene;
