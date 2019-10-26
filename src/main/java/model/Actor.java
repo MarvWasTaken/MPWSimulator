@@ -4,7 +4,9 @@ import annotations.Invisible;
 import exceptions.ActorOutOfCollectiblesException;
 import exceptions.OutOfFieldException;
 import exceptions.TileEmptyException;
+import util.MediaProvider;
 
+import java.applet.AudioClip;
 import java.util.Observable;
 
 
@@ -51,28 +53,24 @@ public class Actor extends Observable {
                 if (yPos >= 1) {
                     return (territory.getTiles()[yPos - 1][xPos]) >= 0;
                 } else {
-                    System.out.println("Norden ist blockiert!");
                     throw new OutOfFieldException();
                 }
             case EAST:
                 if (xPos < (territory.getTiles()[yPos].length - 1)) {
                     return (territory.getTiles()[yPos][xPos + 1]) >= 0;
                 } else {
-                    System.out.println("Osten ist blockiert!");
                     throw new OutOfFieldException();
                 }
             case SOUTH:
                 if (yPos < (territory.getTiles().length - 1)) {
                     return (territory.getTiles()[yPos + 1][xPos]) >= 0;
                 } else {
-                    System.out.println("Süden ist blockiert!");
                     throw new OutOfFieldException();
                 }
             case WEST:
                 if (xPos >= 1) {
                     return (territory.getTiles()[yPos][xPos - 1]) >= 0;
                 } else {
-                    System.out.println("Westen ist blockiert!");
                     throw new OutOfFieldException();
                 }
             default:
@@ -111,7 +109,6 @@ public class Actor extends Observable {
         if (this.territory.getTiles()[this.yPos][this.xPos] > 0) {
             this.numberOfCollectibles++;
             this.territory.getTiles()[this.yPos][this.xPos]--;
-            System.out.println("es sind noch "+this.territory.getTiles()[this.yPos][this.xPos]+" Körner auf dem Feld.");
         } else {
             throw new TileEmptyException();
         }
@@ -123,7 +120,6 @@ public class Actor extends Observable {
         } else if (this.territory.getTiles()[this.yPos][this.xPos] < 12) {
             this.territory.getTiles()[this.yPos][this.xPos]++;
             this.numberOfCollectibles--;
-            System.out.println("Noch "+this.numberOfCollectibles+" Körner im Maul.");
         }
     }
 

@@ -165,6 +165,5 @@ public class Territory extends Observable {
 
     public void main() {
         this.getActor().main();
-        System.out.println("Ich bin die herkömmliche Main!");
     }
 }

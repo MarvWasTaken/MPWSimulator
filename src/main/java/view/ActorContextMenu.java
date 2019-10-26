@@ -72,7 +72,6 @@ public class ActorContextMenu extends ContextMenu {
                 menuItem.setOnAction(event -> {
                     try {
                         method.invoke(territoryPanel.getTerritory());
-                        System.out.println("invoked " + method.getName());
                         territoryPanel.draw();
                     } catch (Exception e) {
                         e.printStackTrace();

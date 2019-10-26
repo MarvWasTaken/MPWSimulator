@@ -1,17 +1,26 @@
 package simulation;
 
 import contoller.SimulationController;
+import lombok.Getter;
 import view.TerritoryPanel;
 
 import java.time.Instant;
+
 
 public class SimulationsThread extends Thread {
     TerritoryPanel territoryPanel;
     SimulationController parent;
 
+    public Object getLock() {
+        return lock;
+    }
+
+    public Object lock;
+
     public SimulationsThread(TerritoryPanel territoryPanel, SimulationController parent) {
         this.territoryPanel = territoryPanel;
         this.parent = parent;
+        lock = new Object();
     }
 
     public void run() {
@@ -26,21 +35,16 @@ public class SimulationsThread extends Thread {
             }
         });
         try {
-            System.out.println(Instant.now().toString());
-            /**if (territoryPanel.getTerritory().getActor().vornFrei(territoryPanel.getTerritory())){
-             territoryPanel.getTerritory().getActor().vor();
-             territoryPanel.draw();
-             }*/
             if(parent.isRunning()){
                 territoryPanel.getTerritory().main();
                 territoryPanel.draw();
                 this.sleep((int) (5000 - Math.floor(5000 * (parent.getWindowController().getCustomToolBar().getSpeedSlider().getValue() / 100))));
             }
         } catch (Exception e) {
-            System.out.println("Abgefangene exception! " + e.getClass());
             e.printStackTrace();
             this.interrupt();
             this.territoryPanel.getTerritory().deleteObservers();
         }
     }
+
 }

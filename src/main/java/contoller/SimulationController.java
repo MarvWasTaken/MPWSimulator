@@ -37,6 +37,7 @@ public class SimulationController {
     public void stop() {
         this.simulationState = STOPPED;
         thread.interrupt();
+        thread.stop();
         thread = new SimulationsThread(this.windowController.getTerritoryPanel(), this);
     }
 

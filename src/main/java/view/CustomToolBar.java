@@ -146,10 +146,6 @@ public class CustomToolBar extends ToolBar {
         playPauseBtnTg = new ToggleGroup();
         playPauseBtnTg.getToggles().addAll(playBtn, pauseBtn, stopBtn);
 
-        speedSlider.setOnMouseReleased(event -> {
-            System.out.println(speedSlider.getValue());
-        });
-
         this.getItems().addAll(
                 createNewFileBtn,
                 openFileBtn,

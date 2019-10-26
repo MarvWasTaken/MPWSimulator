@@ -36,10 +36,10 @@ public class ProgrammController {
             if (!success) {
                 System.out.println("no success creating programms directory");
             } else {
-                System.out.println("directory created");
+                System.out.println("programms directory created");
             }
         } else {
-            System.out.println("Programm directory besteht bereits!");
+            System.out.println("Programm directory already exists!");
         }
         return programmDirectory;
     }
@@ -50,8 +50,6 @@ public class ProgrammController {
         String suffix = "}";
 
 
-        System.out.println(fileName);
-        System.out.println(PROGRAMM_DIRECTORY + "/"+ fileName);
         File file = new File(PROGRAMM_DIRECTORY +"/"+ fileName + ".java");
         if (!file.exists()) {
             try {
@@ -62,12 +60,11 @@ public class ProgrammController {
                 bufferedWriter.write(suffix);
                 bufferedWriter.close();
                 if (success) {
-                    System.out.println("Geil man Porsche Cayman S!");
                     loadProgrammFromFile(file);
                     return true;
                 }
             } catch (IOException ioe) {
-                System.out.println("File konnte nicht erstellt werden");
+                System.out.println("File could not be created");
             }
         }
         return false;
@@ -108,7 +105,6 @@ public class ProgrammController {
 
         //Setting current OS fileseparator char
         String ret = System.getProperty("file.separator");
-        System.out.println(ret);
         return file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(ret)+1,file.getAbsolutePath().indexOf('.'));
 
     }
@@ -142,7 +138,6 @@ public class ProgrammController {
         try{
             String content = new String(Files.readAllBytes(Paths.get(file.toURI())));
             content = content.substring(content.indexOf('{') + 1, content.lastIndexOf('}'));
-            System.out.println(content);
             return content;
         } catch (Exception e){
             e.printStackTrace();
@@ -154,12 +149,6 @@ public class ProgrammController {
         String prefix =
                         "import model.Territory; public class " + file.getName().substring(0, file.getName().indexOf('.')) + " extends Territory{";
         String suffix = "}";
-
-        System.out.println("###########");
-        System.out.println(prefix);
-        System.out.println(content);
-        System.out.println(suffix);
-        System.out.println("###########");
 
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));

@@ -15,8 +15,6 @@ import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public class CustomMenuBar extends MenuBar {
 
     private TerritoryPanel territoryPanel;

@@ -77,11 +77,7 @@ public class WindowController {
             dialog.getDialogPane().lookupButton(ButtonType.OK).setDisable(!dialog.getEditor().getText().matches("^[A-Z]([a-z]|[A-Z]|[0-9])*$"));
         });
 
-
         Optional<String> result = dialog.showAndWait();
-
-        System.out.println("new Stage created!");
-
 
         result.ifPresent(fileName -> {
             boolean success = ProgrammController.makeProgrammFile(fileName, codeArea);
@@ -175,8 +171,6 @@ public class WindowController {
         territoryPanel.getCanvas().addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             int x = (int) (Math.floor(mouseEvent.getX() / TerritoryPanel.CELLSIZE));
             int y = (int) (Math.floor(mouseEvent.getY() / TerritoryPanel.CELLSIZE));
-            System.out.println(x);
-            System.out.println(y);
             switch (territoryPanel.getTerritoryMode()) {
                 case TerritoryPanel.SETTING_ACTOR:
                     territoryPanel.getTerritory().getActor().setxPos(x);
@@ -336,7 +330,6 @@ public class WindowController {
         stage.show();
         RegistrationController.APPS_RUNNING.add(stage);
         stage.setOnCloseRequest(event -> {
-            System.out.println("Schließt jetzt!");
             saveProgrammCodeToFile(codeArea.getText());
             RegistrationController.APPS_RUNNING.remove(RegistrationController.getStageForApp(fileName));
             simulationController.killAllThreads();
@@ -354,7 +347,6 @@ public class WindowController {
         stage.show();
         RegistrationController.APPS_RUNNING.add(stage);
         stage.setOnCloseRequest(event -> {
-            System.out.println("Schließt jetzt!");
             saveProgrammCodeToFile(codeArea.getText());
             RegistrationController.APPS_RUNNING.remove(RegistrationController.getStageForApp(fileName));
             simulationController.killAllThreads();
@@ -375,6 +367,7 @@ public class WindowController {
         File file = fc.showOpenDialog(stage);
         if (file != null) {
             ProgrammController.loadProgrammFromFile(file);
+            this.getTerritoryPanel().draw();
         } else {
             System.out.println("File konnte nicht geladen werden.");
         }

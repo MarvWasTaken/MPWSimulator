@@ -111,7 +111,6 @@ public class TerritoryPanel extends Region {
             resize(x, y);
             return;
         });
-        System.out.println("nothing happened.");
     }
 
 
@@ -192,7 +191,6 @@ public class TerritoryPanel extends Region {
 
     public void setTerritoryMode(int territoryMode) {
         this.territoryMode = this.territoryMode == territoryMode ? -1 : territoryMode;
-        System.out.println("Territory Mode is " + this.territoryMode);
     }
 
 
